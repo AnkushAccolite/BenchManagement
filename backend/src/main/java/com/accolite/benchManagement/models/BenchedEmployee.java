@@ -1,0 +1,52 @@
+package com.accolite.benchManagement.models;
+
+import jakarta.annotation.PostConstruct;
+import lombok.Data;
+import lombok.NonNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
+
+@Document(collection = "BenchedEmployees")
+@Data
+public class BenchedEmployee {
+    @Id
+    private String id;
+
+    private String name;
+
+    @Indexed(unique = true)
+    @NonNull
+    private String empId;
+
+    private String doj;
+
+    private String baseLocation;
+
+    private String client;
+
+    private Integer ageing;
+
+    private String benchedOn;
+
+    @PostConstruct
+    public void calculateAgeing() {
+        if (benchedOn != null && !benchedOn.isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            LocalDate benchedDate = LocalDate.parse(benchedOn, formatter);
+            LocalDate currentDate = LocalDate.now();
+
+            // Calculate the difference in days
+            this.ageing = (int) ChronoUnit.DAYS.between(benchedDate, currentDate);
+        } else {
+            this.ageing = 0;  // Default if benchedOn is not provided
+        }
+    }
+
+
+}
