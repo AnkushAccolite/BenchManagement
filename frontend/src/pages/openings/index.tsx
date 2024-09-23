@@ -1,12 +1,15 @@
-import { Layout } from '@/components/custom/layout'
-import { Search } from '@/components/search'
-import ThemeSwitch from '@/components/theme-switch'
-import { UserNav } from '@/components/user-nav'
-import { DataTable } from './components/data-table'
-import { columns } from './components/columns'
-import { openings } from './data/openings'
+import { Layout } from '@/components/custom/layout';
+import { Search } from '@/components/search';
+import ThemeSwitch from '@/components/theme-switch';
+import { UserNav } from '@/components/user-nav';
+import { DataTable } from './components/data-table';
+import { columns } from './components/columns';
+import { openings } from './data/openings';
+import { useState } from 'react';
 
 export default function Openings() {
+  const [data, setData] = useState(openings); // Initialize state with openings
+
   return (
     <Layout>
       {/* ===== Top Heading ===== */}
@@ -28,9 +31,9 @@ export default function Openings() {
           </div>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <DataTable data={openings} columns={columns} />
+          <DataTable data={data} columns={columns} setData={setData} />
         </div>
       </Layout.Body>
     </Layout>
-  )
+  );
 }
