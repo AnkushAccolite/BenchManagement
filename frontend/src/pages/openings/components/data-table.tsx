@@ -112,7 +112,7 @@ export function DataTable<TData, TValue>({
                       title={
                         typeof header.column.columnDef.header === 'function'
                           ? header.column.columnDef.header(header.getContext())
-                          : header.column.columnDef.header || 'Untitled'
+                          : header.column.columnDef.header ?? 'Untitled'
                       }
                     />
                   </TableHead>

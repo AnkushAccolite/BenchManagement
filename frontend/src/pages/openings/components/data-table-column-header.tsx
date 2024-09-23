@@ -1,7 +1,7 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  CaretSortIcon,
+  // CaretSortIcon,
   EyeNoneIcon,
 } from '@radix-ui/react-icons';
 import { Column } from '@tanstack/react-table';
@@ -32,6 +32,14 @@ export function DataTableColumnHeader<TData, TValue>({
     return <div className={cn(className)}>{title}</div>;
   }
 
+  // const sortingIcon = column.getIsSorted() === 'desc' ? (
+  //   <ArrowDownIcon className='ml-2 h-4 w-4' />
+  // ) : column.getIsSorted() === 'asc' ? (
+  //   <ArrowUpIcon className='ml-2 h-4 w-4' />
+  // ) : (
+  //   <CaretSortIcon className='ml-2 h-4 w-4' />
+  // );
+
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
@@ -43,13 +51,7 @@ export function DataTableColumnHeader<TData, TValue>({
             onClick={() => column.toggleSorting()} // Toggle sorting on button click
           >
             <span>{title}</span>
-            {column.getIsSorted() === 'desc' ? (
-              <ArrowDownIcon className='ml-2 h-4 w-4' />
-            ) : column.getIsSorted() === 'asc' ? (
-              <ArrowUpIcon className='ml-2 h-4 w-4' />
-            ) : (
-              <CaretSortIcon className='ml-2 h-4 w-4' />
-            )}
+            {/* {sortingIcon} Only render sorting icon once */}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start'>
