@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -37,10 +37,12 @@ export function DataTable<TData, TValue>({
   data,
   setData,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [editableRow, setEditableRow] = useState<TData | null>(null);
+  const [tempData, setTempData] = useState<TData | null>(null);
 
   const table = useReactTable({
     data,
@@ -62,16 +64,37 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
   });
 
+  const handleEdit = (row: TData) => {
+    setEditableRow(row);
+    setTempData(row); // Store the current row data for editing
+  };
+
+  const handleSave = () => {
+    if (tempData) {
+      setData(prevData =>
+        prevData.map(item => (item === editableRow ? tempData : item))
+      );
+      setEditableRow(null);
+      setTempData(null);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditableRow(null);
+    setTempData(null);
+  };
+
+  const handleChange = (key: keyof TData, value: any) => {
+    if (tempData) {
+      setTempData({ ...tempData, [key]: value });
+    }
+  };
+
   const handleDelete = (row: TData) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       setData(prevData => prevData.filter(item => item !== row));
       console.log('Deleted:', row);
     }
-  };
-
-  const handleEdit = (row: TData) => {
-    console.log('Editing:', row);
-    // Implement your edit logic here (e.g., open a modal)
   };
 
   return (
@@ -86,9 +109,11 @@ export function DataTable<TData, TValue>({
                   <TableHead key={header.id} colSpan={header.colSpan}>
                     <DataTableColumnHeader
                       column={header.column}
-                      title={typeof header.column.columnDef.header === 'function'
-                        ? header.column.columnDef.header(header.getContext())
-                        : header.column.columnDef.header ?? ''}
+                      title={
+                        typeof header.column.columnDef.header === 'function'
+                          ? header.column.columnDef.header(header.getContext())
+                          : header.column.columnDef.header || 'Untitled'
+                      }
                     />
                   </TableHead>
                 ))}
@@ -99,15 +124,36 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map(row => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {row.getVisibleCells().map(cell => {
+                    const isEditing = editableRow === row.original;
+                    return (
+                      <TableCell key={cell.id}>
+                        {isEditing ? (
+                          <input
+                            type='text'
+                            value={tempData ? (tempData as any)[cell.column.id] : ''}
+                            onChange={e => handleChange(cell.column.id as keyof TData, e.target.value)}
+                            className='border rounded-md p-1'
+                          />
+                        ) : (
+                          flexRender(cell.column.columnDef.cell, cell.getContext())
+                        )}
+                      </TableCell>
+                    );
+                  })}
                   <TableCell>
                     <div className="flex space-x-2">
-                      <Button onClick={() => handleEdit(row.original)}>Edit</Button>
-                      <Button onClick={() => handleDelete(row.original)}>Delete</Button>
+                      {editableRow === row.original ? (
+                        <>
+                          <Button onClick={handleSave}>Save</Button>
+                          <Button onClick={handleCancel}>Cancel</Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button onClick={() => handleEdit(row.original)}>Edit</Button>
+                          <Button onClick={() => handleDelete(row.original)}>Delete</Button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
