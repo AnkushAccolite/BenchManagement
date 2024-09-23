@@ -17,16 +17,16 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { labels } from '../data/data'
-import { taskSchema } from '../data/schema'
+//import { taskSchema } from '../data/schema'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
 export function DataTableRowActions<TData>({
-  row,
+  //row,
 }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original)
+  //const openings = taskSchema.parse(row.original)
 
   return (
     <DropdownMenu>
@@ -47,7 +47,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
+            <DropdownMenuRadioGroup value={''}> // FIX 
               {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}

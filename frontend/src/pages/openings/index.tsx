@@ -4,9 +4,9 @@ import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
-import { tasks } from './data/openings'
+import { openings } from './data/openings'
 
-export default function Tasks() {
+export default function Openings() {
   return (
     <Layout>
       {/* ===== Top Heading ===== */}
@@ -28,7 +28,7 @@ export default function Tasks() {
           </div>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <DataTable data={tasks} columns={columns} />
+          <DataTable data={openings} columns={columns} />
         </div>
       </Layout.Body>
     </Layout>
