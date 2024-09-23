@@ -1,7 +1,8 @@
 import {
+  IconBriefcase,
   IconChecklist,
   IconLayoutDashboard,
-  IconSettings
+  IconSettings,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -148,6 +149,12 @@ export const sidelinks: SideLink[] = [
   //     },
   //   ],
   // },
+  {
+    title: 'Openings',
+    label: '',
+    href: '/openings',
+    icon: <IconBriefcase size={18} />,
+  },
   {
     title: 'Settings',
     label: '',
