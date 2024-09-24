@@ -34,6 +34,16 @@ public class BenchedEmployee {
 
     private String benchedOn;
 
+    public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation, String client, Integer ageing, String benchedOn) {
+        this.name = name;
+        this.empId = empId;
+        this.doj = doj;
+        this.baseLocation = baseLocation;
+        this.client = client;
+        this.ageing = ageing;
+        this.benchedOn = benchedOn;
+    }
+
     @PostConstruct
     public void calculateAgeing() {
         if (benchedOn != null && !benchedOn.isEmpty()) {
