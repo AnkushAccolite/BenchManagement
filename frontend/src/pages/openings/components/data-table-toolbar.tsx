@@ -4,15 +4,58 @@ import { Button } from '@/components/custom/button';
 import { Input } from '@/components/ui/input';
 import { DataTableViewOptions } from './data-table-view-options';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 
-interface DataTableToolbarProps<TData> {
+interface ClientData {
+  clientName: string;
+  projectName: string;
+  // Add other properties as needed
+}
+
+interface DataTableToolbarProps<TData extends ClientData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData extends ClientData>({ table }: DataTableToolbarProps<TData>) {
   const navigate = useNavigate();
-
   const isFiltered = table.getState().columnFilters.length > 0;
+
+  // Extract and sort unique client names from the data
+  const clients = Array.from(new Set(table.getRowModel().rows.map(row => row.original.clientName)))
+    .map(clientName => ({ label: clientName, value: clientName }))
+    .sort((a, b) => a.label.localeCompare(b.label)); // Sort ascending
+
+  // State to manage dropdown open/close
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState('');
+
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const handleClientChange = (clientValue: string) => {
+    setSelectedClient(clientValue);
+    table.getColumn('clientName')?.setFilterValue(clientValue);
+    setDropdownOpen(false); // Close dropdown after selection
+  };
+
+  const handleReset = () => {
+    table.resetColumnFilters();
+    setSelectedClient(''); // Reset selected client
+    setDropdownOpen(false); // Ensure dropdown is closed on reset
+  };
+
+  // Handle clicks outside of the dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='flex items-center justify-between'>
@@ -25,10 +68,39 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />
+        
+        {/* Custom Client Filter Dropdown */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setDropdownOpen(prev => !prev)}
+            className='h-8 w-[150px] rounded-md border bg-transparent text-sm font-small text-muted-foreground placeholder:text-muted-foreground focus:border-blue-500 focus:ring-2 focus:ring-blue-500 lg:w-[200px] text-left pl-2' // Added pl-2 for left padding
+          >
+            {selectedClient || 'Filter by Client...'}
+          </button>
+          {isDropdownOpen && (
+            <div
+              className='absolute z-10 w-full max-h-40 overflow-y-auto bg-white border rounded-md shadow-lg'
+              style={{
+                maxHeight: '160px', // Set the max height for scrollbar
+              }}
+            >
+              {clients.map((client) => (
+                <div
+                  key={client.value}
+                  className='p-2 hover:bg-gray-100 cursor-pointer'
+                  onClick={() => handleClientChange(client.value)}
+                >
+                  {client.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {isFiltered && (
           <Button
             variant='ghost'
-            onClick={() => table.resetColumnFilters()}
+            onClick={handleReset}
             className='h-8 px-2 lg:px-3'
           >
             Reset

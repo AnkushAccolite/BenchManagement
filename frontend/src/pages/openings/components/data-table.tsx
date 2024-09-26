@@ -26,13 +26,21 @@ import { DataTableToolbar } from '../components/data-table-toolbar';
 import { Button } from '@/components/custom/button';
 import { DataTableColumnHeader } from '../components/data-table-column-header';
 
-interface DataTableProps<TData, TValue> {
+// Define an interface for the data that includes required properties
+interface ClientData {
+  clientName: string;
+  projectName: string;
+  // Add other properties as needed
+}
+
+// Update DataTableProps to constrain TData
+interface DataTableProps<TData extends ClientData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   setData: React.Dispatch<React.SetStateAction<TData[]>>;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends ClientData, TValue>({
   columns,
   data,
   setData,
@@ -99,7 +107,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table}/>
+      <DataTableToolbar table={table} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
