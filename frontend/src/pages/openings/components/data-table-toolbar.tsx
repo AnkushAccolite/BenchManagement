@@ -1,18 +1,19 @@
-import { Cross2Icon } from '@radix-ui/react-icons'
-import { Table } from '@tanstack/react-table'
-
-import { Button } from '@/components/custom/button'
-import { Input } from '@/components/ui/input'
-import { DataTableViewOptions } from '../components/data-table-view-options'
+// pages/components/DataTableToolbar.tsx
+import { Cross2Icon } from '@radix-ui/react-icons';
+import { Table } from '@tanstack/react-table';
+import { Button } from '@/components/custom/button';
+import { Input } from '@/components/ui/input';
+import { DataTableViewOptions } from './data-table-view-options';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
-export function DataTableToolbar<TData>({
-  table,
-}: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
+export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+  const navigate = useNavigate(); // Get navigate function
+
+  const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
     <div className='flex items-center justify-between'>
@@ -36,7 +37,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions table={table} onAdd={() => navigate('/add-item')} /> {/* Navigate to Add Item */}
     </div>
-  )
+  );
 }

@@ -71,6 +71,15 @@ export const columns: ColumnDef<Openings>[] = [
     ),
   },
   {
+    accessorKey: 'location',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Location' />
+    ),
+    cell: ({ row }) => (
+      <span>{row.getValue('location')}</span>
+    ),
+  },
+  {
     accessorKey: 'deadline',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Deadline' />
