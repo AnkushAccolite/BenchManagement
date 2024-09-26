@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { Task } from '@/data/schema'
+import { Task } from '../data/schema'
 import { DataTableColumnHeader } from './data-table-column-header'
-import { DataTableRowActions } from './data-table-row-actions'
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -64,10 +63,5 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Bench DOJ' />
     ),
-  },
-  {
-    id: 'actions', // Unique identifier for the actions column
-    header: 'Actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ]

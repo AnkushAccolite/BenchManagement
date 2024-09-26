@@ -13,12 +13,12 @@ import {
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
-  onAdd: () => void; // Add onAdd prop for the Add button
+  onAdd: () => void;
 }
 
 export function DataTableViewOptions<TData>({
   table,
-  onAdd, // Destructure onAdd
+  onAdd,
 }: DataTableViewOptionsProps<TData>) {
   return (
     <div className="flex items-center">
@@ -54,7 +54,12 @@ export function DataTableViewOptions<TData>({
             ))}
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button onClick={onAdd} variant='outline' size='sm' className='ml-2 h-8 lg:flex'>
+      <Button
+        onClick={onAdd}
+        variant='outline'
+        size='sm'
+        className='ml-2 h-8 lg:flex bg-gray-800 text-white dark:bg-white dark:text-gray-800 border border-gray-800 dark:border-white'
+      >
         ADD
       </Button>
     </div>

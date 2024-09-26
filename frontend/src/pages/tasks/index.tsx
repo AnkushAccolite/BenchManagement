@@ -4,11 +4,12 @@ import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
-import { tasks } from './data/tasks'
-import React, { useState } from 'react'
+import { tasks as initialTasks } from './data/tasks'
+import { useState } from 'react'
 
 export default function Tasks() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [tasks, setTasks] = useState(initialTasks); // Manage tasks state
 
   const filteredData = tasks.filter(task =>
     task.empId.toString().includes(searchTerm.toLowerCase()) ||
@@ -32,7 +33,7 @@ export default function Tasks() {
           </div>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <DataTable data={filteredData} columns={columns} />
+          <DataTable data={filteredData} columns={columns} setData={setTasks} />
         </div>
       </Layout.Body>
     </Layout>

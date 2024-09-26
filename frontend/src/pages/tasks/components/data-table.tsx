@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,7 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -19,26 +19,29 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/table';
 
-import { DataTablePagination } from '../components/data-table-pagination'
-import { DataTableToolbar } from '../components/data-table-toolbar'
+import { DataTablePagination } from '../components/data-table-pagination';
+import { DataTableToolbar } from '../components/data-table-toolbar';
+import { Button } from '@/components/custom/button';
+import { Task } from '../data/schema';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps {
+  columns: ColumnDef<Task>[];
+  data: Task[];
+  setData: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  setData,
+}: DataTableProps) {
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [editableRow, setEditableRow] = React.useState<Task | null>(null);
+  const [tempData, setTempData] = React.useState<Task | null>(null);
 
   const table = useReactTable({
     data,
@@ -55,7 +58,40 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  })
+  });
+
+  const handleEdit = (row: Task) => {
+    setEditableRow(row);
+    setTempData(row);
+  };
+
+  const handleSave = () => {
+    if (tempData && editableRow) {
+      setData(prevData =>
+        prevData.map(item => (item.empId === editableRow.empId ? tempData : item))
+      );
+      setEditableRow(null);
+      setTempData(null);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditableRow(null);
+    setTempData(null);
+  };
+
+  const handleChange = (key: keyof Task, value: any) => {
+    if (tempData) {
+      setTempData({ ...tempData, [key]: value });
+    }
+  };
+
+  const handleDelete = (row: Task) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      setData(prevData => prevData.filter(item => item.empId !== row.empId));
+      console.log('Deleted:', row);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -69,35 +105,50 @@ export function DataTable<TData, TValue>({
                   <TableHead key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                      {editableRow === row.original ? (
+                        <input
+                          type="text"
+                          value={tempData ? (tempData as any)[cell.column.id] : ''}
+                          onChange={e => handleChange(cell.column.id as keyof Task, e.target.value)}
+                          className="border rounded-md p-1"
+                        />
+                      ) : (
+                        flexRender(cell.column.columnDef.cell, cell.getContext())
                       )}
                     </TableCell>
                   ))}
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      {editableRow === row.original ? (
+                        <>
+                          <Button onClick={handleSave}>Save</Button>
+                          <Button onClick={handleCancel}>Cancel</Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button onClick={() => handleEdit(row.original)}>Edit</Button>
+                          <Button onClick={() => handleDelete(row.original)}>Delete</Button>
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -107,5 +158,5 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
     </div>
-  )
+  );
 }
