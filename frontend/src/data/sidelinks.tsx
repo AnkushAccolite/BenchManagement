@@ -4,7 +4,7 @@ import {
   IconLayoutDashboard,
   IconSettings,
   IconBook,
-  IconSettings,
+  
 } from '@tabler/icons-react'
 
 export interface NavLink {
