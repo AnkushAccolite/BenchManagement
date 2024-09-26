@@ -1,25 +1,25 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  CaretSortIcon,
+  // CaretSortIcon,
   EyeNoneIcon,
-} from '@radix-ui/react-icons'
-import { Column } from '@tanstack/react-table'
+} from '@radix-ui/react-icons';
+import { Column } from '@tanstack/react-table';
 
-import { Button } from '@/components/custom/button'
+import { Button } from '@/components/custom/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>
-  title: string
+  column: Column<TData, TValue>;
+  title: string;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
@@ -27,9 +27,18 @@ export function DataTableColumnHeader<TData, TValue>({
   title,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  // Render the title without sorting options if the column can't be sorted
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>
+    return <div className={cn(className)}>{title}</div>;
   }
+
+  // const sortingIcon = column.getIsSorted() === 'desc' ? (
+  //   <ArrowDownIcon className='ml-2 h-4 w-4' />
+  // ) : column.getIsSorted() === 'asc' ? (
+  //   <ArrowUpIcon className='ml-2 h-4 w-4' />
+  // ) : (
+  //   <CaretSortIcon className='ml-2 h-4 w-4' />
+  // );
 
   return (
     <div className={cn('flex items-center space-x-2', className)}>
@@ -39,25 +48,20 @@ export function DataTableColumnHeader<TData, TValue>({
             variant='ghost'
             size='sm'
             className='-ml-3 h-8 data-[state=open]:bg-accent'
+            onClick={() => column.toggleSorting()} // Toggle sorting on button click
           >
             <span>{title}</span>
-            {column.getIsSorted() === 'desc' ? (
-              <ArrowDownIcon className='ml-2 h-4 w-4' />
-            ) : column.getIsSorted() === 'asc' ? (
-              <ArrowUpIcon className='ml-2 h-4 w-4' />
-            ) : (
-              <CaretSortIcon className='ml-2 h-4 w-4' />
-            )}
+            {/* {sortingIcon} Only render sorting icon once */}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start'>
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUpIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Asc
+            Ascending
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Desc
+            Descending
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
@@ -67,5 +71,5 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
+  );
 }
