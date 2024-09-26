@@ -9,49 +9,34 @@ import {
   StopwatchIcon,
 } from '@radix-ui/react-icons'
 
-export const labels = [
-  {
-    value: 'bug',
-    label: 'Bug',
-  },
-  {
-    value: 'feature',
-    label: 'Feature',
-  },
-  {
-    value: 'documentation',
-    label: 'Documentation',
-  },
-]
 
 export const statuses = [
   {
-    value: 'backlog',
-    label: 'Backlog',
+    value: 'under_evaluation',
+    label: 'Under Evaluation',
     icon: QuestionMarkCircledIcon,
   },
   {
-    value: 'todo',
-    label: 'Todo',
+    value: 'interview_in_progress',
+    label: 'Interview in Progress',
     icon: CircleIcon,
   },
   {
-    value: 'in progress',
-    label: 'In Progress',
+    value: 'onboarding_in_progress',
+    label: 'Onboarding in Progress',
     icon: StopwatchIcon,
   },
   {
-    value: 'done',
-    label: 'Done',
+    value: 'resigned',
+    label: 'Resigned',
     icon: CheckCircledIcon,
   },
   {
-    value: 'canceled',
-    label: 'Canceled',
+    value: 'onboarded',
+    label: 'Onboarded',
     icon: CrossCircledIcon,
   },
 ]
-
 export const priorities = [
   {
     label: 'Low',

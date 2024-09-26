@@ -5,8 +5,13 @@ import { Button } from '@/components/custom/button'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '../components/data-table-view-options'
 
-import { priorities, statuses } from '../data/data'
-import { DataTableFacetedFilter } from './data-table-faceted-filter'
+const statusOptions = [
+  { value: 'under_evaluation', label: 'Under Evaluation' },
+  { value: 'interview_in_progress', label: 'Interview in Progress' },
+  { value: 'onboarding_in_progress', label: 'Onboarding in Progress' },
+  { value: 'resigned', label: 'Resigned' },
+  { value: 'onboarded', label: 'Onboarded' },
+]
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -17,33 +22,54 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
+  const handleFilterChange =
+    (columnId: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      table.getColumn(columnId)?.setFilterValue(event.target.value)
+    }
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    table.getColumn('status')?.setFilterValue(event.target.value)
+  }
+
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
         <Input
-          placeholder='Filter tasks...'
-          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('title')?.setFilterValue(event.target.value)
-          }
-          className='h-8 w-[150px] lg:w-[250px]'
+          placeholder='Filter by Skills...'
+          onChange={handleFilterChange('skills')}
+          className='h-8 w-[150px] lg:w-[200px]'
         />
-        <div className='flex gap-x-2'>
-          {table.getColumn('status') && (
-            <DataTableFacetedFilter
-              column={table.getColumn('status')}
-              title='Status'
-              options={statuses}
-            />
-          )}
-          {table.getColumn('priority') && (
-            <DataTableFacetedFilter
-              column={table.getColumn('priority')}
-              title='Priority'
-              options={priorities}
-            />
-          )}
-        </div>
+        <Input
+          placeholder='Filter by Experience...'
+          onChange={handleFilterChange('experience')}
+          className='h-8 w-[150px] lg:w-[200px]'
+        />
+        {/* Simple dropdown for filtering by Status with the same styles as Input */}
+        <select
+          onChange={handleStatusChange}
+          className='h-8 w-[150px] rounded-md border bg-transparent text-sm font-small text-muted-foreground placeholder:text-muted-foreground focus:border-blue-500 focus:ring-2 focus:ring-blue-500 lg:w-[200px]'
+          defaultValue=''
+        >
+          <option value='' disabled>
+            Filter by Status...
+          </option>
+          {statusOptions.map((option) => (
+            <option key={option.label} value={option.label}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+
+        <Input
+          placeholder='Filter by Ageing...'
+          onChange={handleFilterChange('ageing')}
+          className='h-8 w-[150px] lg:w-[200px]'
+        />
+        <Input
+          placeholder='Filter by Client Name...'
+          onChange={handleFilterChange('clientName')}
+          className='h-8 w-[150px] lg:w-[200px]'
+        />
         {isFiltered && (
           <Button
             variant='ghost'
