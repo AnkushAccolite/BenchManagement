@@ -44,9 +44,7 @@ export default function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics'>Analytics</TabsTrigger>
               <TabsTrigger value='reports'>Reports</TabsTrigger>
-              {/* <TabsTrigger value='notifications'>Notifications</TabsTrigger> */}
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -189,19 +187,4 @@ const topNav = [
     href: 'dashboard/overview',
     isActive: true,
   },
-  {
-    title: 'Projects',
-    href: 'dashboard/customers',
-    isActive: false,
-  },
-  {
-    title: 'Bench Candidate',
-    href: 'dashboard/products',
-    isActive: false,
-  },
-  // {
-  //   title: 'Settings',
-  //   href: 'dashboard/settings',
-  //   isActive: false,
-  // },
 ]
