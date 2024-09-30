@@ -60,11 +60,11 @@ export function DataTableToolbar<TData>({
           ))}
         </select>
 
-        <Input
+        {/* <Input
           placeholder='Filter by Ageing...'
           onChange={handleFilterChange('ageing')}
           className='h-8 w-[150px] lg:w-[200px]'
-        />
+        /> */}
         <Input
           placeholder='Filter by Client Name...'
           onChange={handleFilterChange('clientName')}
