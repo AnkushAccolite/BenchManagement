@@ -9,7 +9,6 @@ import { useState, useRef, useEffect } from 'react';
 interface ClientData {
   clientName: string;
   projectName: string;
-  // Add other properties as needed
 }
 
 interface DataTableToolbarProps<TData extends ClientData> {
@@ -20,12 +19,10 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
   const navigate = useNavigate();
   const isFiltered = table.getState().columnFilters.length > 0;
 
-  // Extract and sort unique client names from the data
   const clients = Array.from(new Set(table.getRowModel().rows.map(row => row.original.clientName)))
     .map(clientName => ({ label: clientName, value: clientName }))
-    .sort((a, b) => a.label.localeCompare(b.label)); // Sort ascending
+    .sort((a, b) => a.label.localeCompare(b.label));
 
-  // State to manage dropdown open/close
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState('');
 
@@ -34,16 +31,15 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
   const handleClientChange = (clientValue: string) => {
     setSelectedClient(clientValue);
     table.getColumn('clientName')?.setFilterValue(clientValue);
-    setDropdownOpen(false); // Close dropdown after selection
+    setDropdownOpen(false);
   };
 
   const handleReset = () => {
     table.resetColumnFilters();
-    setSelectedClient(''); // Reset selected client
-    setDropdownOpen(false); // Ensure dropdown is closed on reset
+    setSelectedClient('');
+    setDropdownOpen(false);
   };
 
-  // Handle clicks outside of the dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -69,7 +65,6 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
           className='h-8 w-[150px] lg:w-[250px]'
         />
         
-        {/* Custom Client Filter Dropdown */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(prev => !prev)}
@@ -81,7 +76,7 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
             <div
               className='absolute z-10 w-full max-h-40 overflow-y-auto bg-white border rounded-md shadow-lg'
               style={{
-                maxHeight: '160px', // Set the max height for scrollbar
+                maxHeight: '160px',
               }}
             >
               {clients.map((client) => (

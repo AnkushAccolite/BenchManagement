@@ -26,14 +26,11 @@ import { DataTableToolbar } from '../components/data-table-toolbar';
 import { Button } from '@/components/custom/button';
 import { DataTableColumnHeader } from '../components/data-table-column-header';
 
-// Define an interface for the data that includes required properties
 interface ClientData {
   clientName: string;
   projectName: string;
-  // Add other properties as needed
 }
 
-// Update DataTableProps to constrain TData
 interface DataTableProps<TData extends ClientData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -74,7 +71,7 @@ export function DataTable<TData extends ClientData, TValue>({
 
   const handleEdit = (row: TData) => {
     setEditableRow(row);
-    setTempData(row); // Store the current row data for editing
+    setTempData(row);
   };
 
   const handleSave = () => {
@@ -141,7 +138,7 @@ export function DataTable<TData extends ClientData, TValue>({
                             type='text'
                             value={tempData ? (tempData as any)[cell.column.id] : ''}
                             onChange={e => handleChange(cell.column.id as keyof TData, e.target.value)}
-                            className='border rounded-md p-1'
+                            className='border rounded-md p-1 text-black'
                           />
                         ) : (
                           flexRender(cell.column.columnDef.cell, cell.getContext())

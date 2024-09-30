@@ -122,7 +122,7 @@ export function DataTable({
                           type="text"
                           value={tempData ? (tempData as any)[cell.column.id] : ''}
                           onChange={e => handleChange(cell.column.id as keyof Task, e.target.value)}
-                          className="border rounded-md p-1"
+                          className="border rounded-md p-1 text-black"
                         />
                       ) : (
                         flexRender(cell.column.columnDef.cell, cell.getContext())
