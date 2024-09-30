@@ -4,6 +4,7 @@ import NotFoundError from './pages/errors/not-found-error'
 import MaintenanceError from './pages/errors/maintenance-error'
 import UnauthorisedError from './pages/errors/unauthorised-error.tsx'
 
+
 const router = createBrowserRouter([
   // Auth routes
   // {
@@ -56,6 +57,12 @@ const router = createBrowserRouter([
         path: 'tasks',
         lazy: async () => ({
           Component: (await import('@/pages/tasks')).default,
+        }),
+      },
+      {
+        path: '/add-employee', // This is the path to your Add Item page
+        lazy: async () => ({
+          Component: (await import('./pages/tasks/components/data-table-add.tsx')).default,
         }),
       },
 
