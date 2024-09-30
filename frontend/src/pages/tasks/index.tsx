@@ -4,14 +4,22 @@ import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
-import { tasks } from './data/tasks'
+import { tasks as initialTasks } from './data/tasks'
+import { useState } from 'react'
 
 export default function Tasks() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [tasks, setTasks] = useState(initialTasks); // Manage tasks state
+
+  const filteredData = tasks.filter(task =>
+    task.empId.toString().includes(searchTerm.toLowerCase()) ||
+    task.empName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Layout>
-      {/* ===== Top Heading ===== */}
       <Layout.Header sticky>
-        <Search />
+        <Search onSearch={setSearchTerm} />
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
           <UserNav />
@@ -22,13 +30,10 @@ export default function Tasks() {
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Welcome back!</h2>
-            <p className='text-muted-foreground'>
-              Here&apos;s a list of your tasks for this month!
-            </p>
           </div>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <DataTable data={tasks} columns={columns} />
+          <DataTable data={filteredData} columns={columns} setData={setTasks} />
         </div>
       </Layout.Body>
     </Layout>

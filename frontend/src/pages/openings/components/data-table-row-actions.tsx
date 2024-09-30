@@ -1,6 +1,5 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
-
 import { Button } from '@/components/custom/button'
 import {
   DropdownMenu,
@@ -12,10 +11,14 @@ import {
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
+  onEdit: (row: TData) => void
+  onDelete: (row: TData) => void
 }
 
 export function DataTableRowActions<TData>({
-  // row,
+  row,
+  onEdit,
+  onDelete,
 }: DataTableRowActionsProps<TData>) {
   return (
     <DropdownMenu>
@@ -29,9 +32,9 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end' className='w-[160px]'>
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onEdit(row.original)}>Edit</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Delete</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => onDelete(row.original)}>Delete</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

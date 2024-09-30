@@ -58,6 +58,19 @@ const router = createBrowserRouter([
           Component: (await import('@/pages/tasks')).default,
         }),
       },
+
+      {
+        path: 'openings',
+        lazy: async () => ({
+          Component: (await import('@/pages/openings')).default,
+        }),
+      },
+      {
+        path: '/add-item', // This is the path to your Add Item page
+        lazy: async () => ({
+          Component: (await import('./pages/openings/components/data-table-add.tsx')).default,
+        }),
+      },
       {
         path: 'chats',
         lazy: async () => ({

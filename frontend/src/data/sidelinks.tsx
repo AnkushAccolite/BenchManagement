@@ -1,7 +1,10 @@
 import {
+  IconBriefcase,
   IconChecklist,
   IconLayoutDashboard,
-  IconSettings
+  IconSettings,
+  IconBook,
+  
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -23,11 +26,12 @@ export const sidelinks: SideLink[] = [
     icon: <IconLayoutDashboard size={18} />,
   },
   {
-    title: 'Tasks',
-    label: '3',
+    title: 'Bench Records',
+    label: '',
     href: '/tasks',
-    icon: <IconChecklist size={18} />,
+    icon: <IconBook size={18} />,
   },
+
   // {
   //   title: 'Chats',
   //   label: '9',
@@ -148,6 +152,12 @@ export const sidelinks: SideLink[] = [
   //     },
   //   ],
   // },
+  {
+    title: 'Openings',
+    label: '',
+    href: '/openings',
+    icon: <IconBriefcase size={18} />,
+  },
   {
     title: 'Settings',
     label: '',
