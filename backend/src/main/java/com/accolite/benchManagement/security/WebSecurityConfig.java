@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -29,22 +31,7 @@ import java.util.Arrays;
 public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
-            // -- Swagger UI v2
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/configuration/**",
-            "/swagger-ui.html",
-            "/webjars/**",
-            "/swagger/*/**",
-            // -- Swagger UI v3 (OpenAPI)
-            "/v3/api-docs/**",
-            "/swagger-ui/**"
-            // other public endpoints of your API may be appended to this array
+            "/**"
     };
 
     @Autowired
@@ -79,8 +66,9 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())  // Enable CORS with default configuration
-                .csrf(csrf -> csrf.disable())  // Disable CSRF
+                .cors()  // Enable CORS configuration
+                .and()
+                .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(accessTokenEntryPoint)  // Handle unauthorized access
                 )
@@ -88,25 +76,24 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Stateless session management
                 )
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow preflight CORS requests
                         .requestMatchers("/api/auth/**").permitAll()  // Publicly accessible API endpoints
                         .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()  // Swagger-related paths are publicly accessible
                         .anyRequest().authenticated()  // All other requests require authentication
                 );
 
-        // Add the custom JWT filter before UsernamePasswordAuthenticationFilter
         http.addFilterBefore(accessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

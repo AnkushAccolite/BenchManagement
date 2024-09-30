@@ -41,15 +41,6 @@ public class Employee implements UserDetails {
         this.password = password;
     }
 
-    //    public Employee(String empName, String empId, String email, String password, String role) {
-//        this.empName = empName;
-//        this.empId = empId;
-//        this.email = email;
-//        this.password = password;
-//        this.role = role;
-//    }
-
-//    -------------------------------------
 @Override
 public Collection<? extends GrantedAuthority> getAuthorities() {
     return Collections.EMPTY_LIST;

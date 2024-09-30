@@ -51,7 +51,7 @@ public class AuthController {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, refreshTokenString));
+        return ResponseEntity.ok(new TokenDTO(user.getId(),user.getEmpId(), user.getEmail(), user.getEmpName(),user.getRole(), accessToken, refreshTokenString));
     }
 
     @PostMapping("signup")
@@ -66,14 +66,13 @@ public class AuthController {
         String accessToken = jwtHelper.generateAccessToken(user);
         String refreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-        return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, refreshTokenString));
+        return ResponseEntity.ok(new TokenDTO(user.getId(),user.getEmpId(), user.getEmail(), user.getEmpName(),user.getRole(), accessToken, refreshTokenString));
     }
 
     @PostMapping("logout")
     public ResponseEntity<?> logout(@RequestBody TokenDTO dto) {
         String refreshTokenString = dto.getRefreshToken();
         if (jwtHelper.validateRefreshToken(refreshTokenString) && refreshTokenRepository.existsById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString))) {
-            // valid and exists in db
             refreshTokenRepository.deleteById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString));
             return ResponseEntity.ok().build();
         }
@@ -98,12 +97,10 @@ public class AuthController {
     public ResponseEntity<?> accessToken(@RequestBody TokenDTO dto) {
         String refreshTokenString = dto.getRefreshToken();
         if (jwtHelper.validateRefreshToken(refreshTokenString) && refreshTokenRepository.existsById(jwtHelper.getTokenIdFromRefreshToken(refreshTokenString))) {
-            // valid and exists in db
-
             Employee user = userService.findById(jwtHelper.getUserIdFromRefreshToken(refreshTokenString));
             String accessToken = jwtHelper.generateAccessToken(user);
 
-            return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, refreshTokenString));
+            return ResponseEntity.ok(new TokenDTO(user.getId(),user.getEmpId(), user.getEmail(), user.getEmpName(),user.getRole(), accessToken, refreshTokenString));
         }
 
         throw new BadCredentialsException("invalid token");
@@ -126,7 +123,7 @@ public class AuthController {
             String accessToken = jwtHelper.generateAccessToken(user);
             String newRefreshTokenString = jwtHelper.generateRefreshToken(user, refreshToken);
 
-            return ResponseEntity.ok(new TokenDTO(user.getId(), accessToken, newRefreshTokenString));
+            return ResponseEntity.ok(new TokenDTO(user.getId(),user.getEmpId(), user.getEmail(), user.getEmpName(),user.getRole(), accessToken, refreshTokenString));
         }
 
         throw new BadCredentialsException("invalid token");

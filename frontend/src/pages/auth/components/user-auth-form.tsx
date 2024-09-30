@@ -1,6 +1,6 @@
-import { HTMLAttributes, useState } from 'react'
+import { HTMLAttributes, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconBrandFacebook, IconBrandGithub } from '@tabler/icons-react'
@@ -16,6 +16,8 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/custom/button'
 import { PasswordInput } from '@/components/custom/password-input'
 import { cn } from '@/lib/utils'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../../redux/authActions'
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -29,13 +31,22 @@ const formSchema = z.object({
     .min(1, {
       message: 'Please enter your password',
     })
-    .min(7, {
-      message: 'Password must be at least 7 characters long',
+    .min(6, {
+      message: 'Password must be at least 6 characters long',
     }),
 })
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { isAuthenticated } = useSelector((state) => state)
+  useEffect(() => {
+    if (isAuthenticated) navigate('/')
+  }, [isAuthenticated])
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,10 +59,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
     console.log(data)
-
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 3000)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    dispatch(login(data, setIsLoading))
   }
 
   return (
