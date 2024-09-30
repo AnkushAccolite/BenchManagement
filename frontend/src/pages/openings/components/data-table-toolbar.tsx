@@ -62,13 +62,13 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
           onChange={(event) =>
             table.getColumn('projectName')?.setFilterValue(event.target.value)
           }
-          className='h-8 w-[150px] lg:w-[250px]'
+          className='h-8 w-[150px] lg:w-[250px] placeholder:text-muted-foreground'
         />
-        
+
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen(prev => !prev)}
-            className='h-8 w-[150px] rounded-md border bg-transparent text-sm font-small text-muted-foreground placeholder:text-muted-foreground focus:border-blue-500 focus:ring-2 focus:ring-blue-500 lg:w-[200px] text-left pl-2' // Added pl-2 for left padding
+            className='h-8 w-[150px] rounded-md border bg-transparent text-sm font-small text-muted-foreground placeholder:text-muted-foreground focus:border-blue-500 focus:ring-2 focus:ring-blue-500 lg:w-[200px] text-left pl-2'
           >
             {selectedClient || 'Filter by Client...'}
           </button>
@@ -82,7 +82,7 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
               {clients.map((client) => (
                 <div
                   key={client.value}
-                  className='p-2 hover:bg-gray-100 cursor-pointer'
+                  className='p-2 hover:bg-gray-100 cursor-pointer text-black'
                   onClick={() => handleClientChange(client.value)}
                 >
                   {client.label}
@@ -91,6 +91,7 @@ export function DataTableToolbar<TData extends ClientData>({ table }: DataTableT
             </div>
           )}
         </div>
+
 
         {isFiltered && (
           <Button
