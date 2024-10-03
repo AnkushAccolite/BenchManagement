@@ -40,7 +40,7 @@ export function UserNav() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const data = { userId, empId, email, name, role, accessToken, refreshToken }
-    await dispatch(logout(data))
+    // await dispatch(logout(data))
     localStorage.clear()
     navigate(0)
   }
