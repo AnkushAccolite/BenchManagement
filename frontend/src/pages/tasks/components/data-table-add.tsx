@@ -4,7 +4,7 @@ import { UserNav } from '@/components/user-nav'
 import React, { useState } from 'react';
 
 // Sample data for client names
-const clientNames = ['MS', 'GS', 'Fidelity'];
+const clientNames = ['Morgan Stanely', 'Goldman Sachs', 'Fidelity','J.P Morgan','British Telecom'];
 
 export default function AddEmployee() {
     const [formData, setFormData] = useState({
