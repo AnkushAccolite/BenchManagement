@@ -1,5 +1,4 @@
 import { Layout } from '@/components/custom/layout'
-// import { Button } from '@/components/custom/button'
 import {
   Card,
   CardContent,
@@ -32,9 +31,7 @@ export default function Dashboard() {
       <Layout.Body>
         <div className='mb-2 flex items-center justify-between space-y-2'>
           <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
-          {/* <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
-          </div> */}
+
         </div>
         <Tabs
           orientation='vertical'
@@ -44,7 +41,6 @@ export default function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='reports'>Reports</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -64,14 +60,12 @@ export default function Dashboard() {
                     strokeWidth='2'
                     className='h-4 w-4 text-muted-foreground'
                   >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
+                    <path d='M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-7l-2-2H5a2 2 0 0 0-2 2z' />
                   </svg>
+
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>200</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
-                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -96,9 +90,6 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>+190</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +180.1% from last month
-                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -120,9 +111,6 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>+20</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +19% from last month
-                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -147,9 +135,6 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>+573</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +201 since last hour
-                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -181,10 +166,3 @@ export default function Dashboard() {
   )
 }
 
-// const topNav = [
-//   {
-//     title: 'Overview',
-//     href: 'dashboard/overview',
-//     isActive: true,
-//   },
-// ]

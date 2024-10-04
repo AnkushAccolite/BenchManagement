@@ -2,13 +2,12 @@ import { z } from 'zod'
 
 // Keeping a simple non-relational schema here.
 export const taskSchema = z.object({
-  projectId: z.string(),
+  openingId: z.string(),
   projectName: z.string(),
+  opening:z.string(),
   clientName: z.string(),
   requirements: z.string(),
-  projectHead: z.string(),
-  department: z.string(),
-  departmentHead: z.string(),
+  skills: z.string(),
   deadline: z.string(),
   location: z.string(),
 })

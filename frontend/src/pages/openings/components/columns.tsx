@@ -6,11 +6,11 @@ import { Openings } from '../data/schema';
 export const columns: ColumnDef<Openings>[] = [
 
   {
-    accessorKey: 'projectId',
+    accessorKey: 'openingId',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Project ID' />
+      <DataTableColumnHeader column={column} title='Opening ID' />
     ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('projectId')}</div>,
+    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('openingId')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -22,6 +22,17 @@ export const columns: ColumnDef<Openings>[] = [
     cell: ({ row }) => (
       <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
         {row.getValue('projectName')}
+      </span>
+    ),
+  },
+  {
+    accessorKey: 'opening',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Opening' />
+    ),
+    cell: ({ row }) => (
+      <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
+        {row.getValue('opening')}
       </span>
     ),
   },
@@ -44,30 +55,12 @@ export const columns: ColumnDef<Openings>[] = [
     ),
   },
   {
-    accessorKey: 'projectHead',
+    accessorKey: 'skills',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Project Head' />
+      <DataTableColumnHeader column={column} title='Skills' />
     ),
     cell: ({ row }) => (
-      <span>{row.getValue('projectHead')}</span>
-    ),
-  },
-  {
-    accessorKey: 'department',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Department' />
-    ),
-    cell: ({ row }) => (
-      <span>{row.getValue('department')}</span>
-    ),
-  },
-  {
-    accessorKey: 'departmentHead',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Department Head' />
-    ),
-    cell: ({ row }) => (
-      <span>{row.getValue('departmentHead')}</span>
+      <span>{row.getValue('skills')}</span>
     ),
   },
   {
