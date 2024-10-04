@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         }),
       },
       {
-        path: '/add-employee', // This is the path to your Add Item page
+        path: '/add-employee',
         lazy: async () => ({
           Component: (await import('./pages/tasks/components/data-table-add.tsx')).default,
         }),
@@ -73,9 +73,21 @@ const router = createBrowserRouter([
         }),
       },
       {
-        path: '/add-item', // This is the path to your Add Item page
+        path: '/add-item',
         lazy: async () => ({
           Component: (await import('./pages/openings/components/data-table-add.tsx')).default,
+        }),
+      },
+      {
+        path: 'projects',
+        lazy: async () => ({
+          Component: (await import('@/pages/projects')).default,
+        }),
+      },
+      {
+        path: '/add-project',
+        lazy: async () => ({
+          Component: (await import('./pages/projects/components/data-table-add.tsx')).default,
         }),
       },
       {
