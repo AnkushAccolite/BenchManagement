@@ -17,8 +17,8 @@ export default function AddProject() {
     clientName: '',
     projectName: '',
     projectHead: '',
-    departmentName: '',
-    departmentHead: '',
+    deptName: '',
+    deptHead: '',
     location: '',
   }
 
@@ -119,9 +119,9 @@ export default function AddProject() {
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
                     <input
                       type='text'
-                      id='departmentName'
-                      name='departmentName'
-                      value={formData.departmentName}
+                      id='deptName'
+                      name='deptName'
+                      value={formData.deptName}
                       onChange={handleChange}
                       className='w-full rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring dark:border-gray-600 dark:bg-gray-900 dark:text-white'
                       placeholder='Enter Department Name'
@@ -136,9 +136,9 @@ export default function AddProject() {
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
                     <input
                       type='text'
-                      id='departmentHead'
-                      name='departmentHead'
-                      value={formData.departmentHead}
+                      id='deptHead'
+                      name='deptHead'
+                      value={formData.deptHead}
                       onChange={handleChange}
                       className='w-full rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring dark:border-gray-600 dark:bg-gray-900 dark:text-white'
                       placeholder='Enter Department Head'
