@@ -1,16 +1,15 @@
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table'
 
-import { DataTableColumnHeader } from './data-table-column-header';
-import { Openings } from '../data/schema';
+import { DataTableColumnHeader } from './data-table-column-header'
+import { Openings } from '../data/schema'
 
 export const columns: ColumnDef<Openings>[] = [
-
   {
-    accessorKey: 'openingId',
+    accessorKey: 'id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Opening ID' />
     ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('openingId')}</div>,
+    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -26,13 +25,13 @@ export const columns: ColumnDef<Openings>[] = [
     ),
   },
   {
-    accessorKey: 'opening',
+    accessorKey: 'openings',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Opening' />
+      <DataTableColumnHeader column={column} title='Openings' />
     ),
     cell: ({ row }) => (
       <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-        {row.getValue('opening')}
+        {row.getValue('openings')}
       </span>
     ),
   },
@@ -41,44 +40,20 @@ export const columns: ColumnDef<Openings>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Client Name' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('clientName')}</span>
-    ),
-  },
-  {
-    accessorKey: 'requirements',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Requirements' />
-    ),
-    cell: ({ row }) => (
-      <span>{row.getValue('requirements')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('clientName')}</span>,
   },
   {
     accessorKey: 'skills',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Skills' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('skills')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('skills')}</span>,
   },
   {
     accessorKey: 'location',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Location' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('location')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('location')}</span>,
   },
-  {
-    accessorKey: 'deadline',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Deadline' />
-    ),
-    cell: ({ row }) => (
-      <span>{row.getValue('deadline')}</span>
-    ),
-  },
-];
+]

@@ -1,13 +1,21 @@
-import { Layout } from '@/components/custom/layout';
-import ThemeSwitch from '@/components/theme-switch';
-import { UserNav } from '@/components/user-nav';
-import { DataTable } from './components/data-table';
-import { columns } from './components/columns';
-import { projects } from './data/projects';
-import { useState } from 'react';
+import { Layout } from '@/components/custom/layout'
+import ThemeSwitch from '@/components/theme-switch'
+import { UserNav } from '@/components/user-nav'
+import { DataTable } from './components/data-table'
+import { columns } from './components/columns'
+import { useEffect, useState } from 'react'
+import axiosInstance from '@/lib/axios'
 
 export default function Projects() {
-  const [data, setData] = useState(projects); 
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    const getData = async () => {
+      const { data: response } = await axiosInstance.get('/project')
+      setData(response)
+    }
+    getData()
+  }, [])
 
   return (
     <Layout>
@@ -33,5 +41,5 @@ export default function Projects() {
         </div>
       </Layout.Body>
     </Layout>
-  );
+  )
 }

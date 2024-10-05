@@ -5,6 +5,7 @@ export const login = (data, setIsLoading) => async (dispatch) => {
     .post('http://localhost:8080/api/auth/login', data)
     .then((response) => {
       console.log('Login successful:', response.data)
+      localStorage.setItem('accessToken', response.data.accessToken)
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: response.data,

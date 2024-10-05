@@ -1,16 +1,17 @@
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table'
 
-import { DataTableColumnHeader } from './data-table-column-header';
-import { Projects } from '../data/schema';
+import { DataTableColumnHeader } from './data-table-column-header'
+import { Projects } from '../data/schema'
 
 export const columns: ColumnDef<Projects>[] = [
-
   {
     accessorKey: 'projectId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Project ID' />
     ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('projectId')}</div>,
+    cell: ({ row }) => (
+      <div className='w-[80px]'>{row.getValue('projectId')}</div>
+    ),
     enableSorting: false,
     enableHiding: false,
   },
@@ -30,44 +31,34 @@ export const columns: ColumnDef<Projects>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Client Name' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('clientName')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('clientName')}</span>,
   },
   {
     accessorKey: 'projectHead',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Project Head' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('projectHead')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('projectHead')}</span>,
   },
   {
-    accessorKey: 'department',
+    accessorKey: 'deptName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Department' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('department')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('deptName')}</span>,
   },
   {
-    accessorKey: 'departmentHead',
+    accessorKey: 'deptHead',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Department Head' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('departmentHead')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('deptHead')}</span>,
   },
   {
     accessorKey: 'location',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Location' />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue('location')}</span>
-    ),
+    cell: ({ row }) => <span>{row.getValue('location')}</span>,
   },
-];
+]

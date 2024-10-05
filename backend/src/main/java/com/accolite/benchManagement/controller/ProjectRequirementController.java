@@ -39,8 +39,9 @@ public class ProjectRequirementController {
                 .orElseThrow(() -> new Exception("Project Requirement not found"));
 
         existingRequirement.setProjectId(requirementDetails.getProjectId());
-        existingRequirement.setSkillId(requirementDetails.getSkillId());
+        existingRequirement.setSkills(requirementDetails.getSkills());
         existingRequirement.setOpenings(requirementDetails.getOpenings());
+        existingRequirement.setClientName(requirementDetails.getClientName());
 
         ProjectRequirement updatedRequirement = projectRequirementRepository.save(existingRequirement);
         return ResponseEntity.ok(updatedRequirement);

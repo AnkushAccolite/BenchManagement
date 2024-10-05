@@ -30,19 +30,23 @@ public class ProjectController {
 
     @GetMapping("/{projectId}")
     public ResponseEntity<Project> getProjectById(@PathVariable String projectId) throws Exception {
-        Project project = projectRepository.findById(projectId)
+        Project project = projectRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new Exception("Project not found"));
         return ResponseEntity.ok(project);
     }
 
     @PutMapping("/update/{projectId}")
     public ResponseEntity<Project> updateProject(@PathVariable String projectId, @RequestBody Project projectDetails) throws Exception {
-        Project existingProject = projectRepository.findById(projectId)
+        Project existingProject = projectRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new Exception("Project not found"));
 
-        // Update the fields
+
         existingProject.setProjectName(projectDetails.getProjectName());
         existingProject.setClientName(projectDetails.getClientName());
+        existingProject.setProjectHead(projectDetails.getProjectHead());
+        existingProject.setLocation(projectDetails.getLocation());
+        existingProject.setDeptHead(projectDetails.getDeptHead());
+        existingProject.setDeptName(projectDetails.getDeptName());
 
         Project updatedProject = projectRepository.save(existingProject);
         return ResponseEntity.ok(updatedProject);

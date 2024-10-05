@@ -13,13 +13,29 @@ public class ProjectRequirement {
 
     private String projectId;
 
-    private String skillId;
+    private String clientName;
+
+    private String skills;
 
     private Integer openings;
 
-    public ProjectRequirement(String projectId, String skillId, Integer openings) {
+
+    public ProjectRequirement(String projectId, String skills,String clientName, Integer openings) {
         this.projectId = projectId;
-        this.skillId = skillId;
+        this.skills = skills;
+        this.clientName = clientName;
         this.openings = openings;
+        this.id = generateId(projectId);
+    }
+
+    private String generateId(String projectId) {
+        String[] parts = projectId.split("-");
+        if (parts.length >= 3) {
+            String projectShort = parts[1] + "-" + parts[2];
+            long uniqueNumber = System.currentTimeMillis() % 10000;
+            return projectShort + "-" + uniqueNumber;
+        } else {
+            throw new IllegalArgumentException("Invalid projectId format");
+        }
     }
 }

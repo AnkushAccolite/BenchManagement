@@ -6,9 +6,9 @@ export const taskSchema = z.object({
   projectName: z.string(),
   clientName: z.string(),
   projectHead: z.string(),
-  department: z.string(),
-  departmentHead: z.string(),
+  dept: z.string(),
+  deptHead: z.string(),
   location: z.string(),
 })
 
-export type Projects = z.infer<typeof taskSchema>;
+export type Projects = z.infer<typeof taskSchema>
