@@ -77,8 +77,8 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow preflight CORS requests
-                        .requestMatchers("/api/auth/**").permitAll()  // Publicly accessible API endpoints
-                        .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()  // Swagger-related paths are publicly accessible
+                        .requestMatchers(AUTH_WHITELIST).permitAll()  // Publicly accessible API endpoints
+//                        .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()  // Swagger-related paths are publicly accessible
                         .anyRequest().authenticated()  // All other requests require authentication
                 );
 

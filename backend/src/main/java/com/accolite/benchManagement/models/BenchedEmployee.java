@@ -3,12 +3,16 @@ package com.accolite.benchManagement.models;
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import lombok.NonNull;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -35,19 +39,29 @@ public class BenchedEmployee {
 
     private String benchedOn;
 
+    private Integer experience;
+
     // List of skills associated with the benched employee
     @DBRef
     private List<Skill> skills;
 
-    public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation, String client, Integer ageing, String benchedOn, List<Skill> skills) {
+    private Boolean isDeleted;
+
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
+
+    public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation, String client,String benchedOn,Integer experience) {
         this.name = name;
         this.empId = empId;
         this.doj = doj;
         this.baseLocation = baseLocation;
         this.client = client;
-        this.ageing = ageing;
         this.benchedOn = benchedOn;
-        this.skills = skills;
+        this.experience=experience;
+        this.isDeleted=false;
     }
 
     @PostConstruct

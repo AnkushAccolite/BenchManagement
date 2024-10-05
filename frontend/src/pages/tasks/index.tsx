@@ -4,16 +4,53 @@ import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
-import { tasks as initialTasks } from './data/tasks'
-import { useState } from 'react'
+// import { tasks as initialTasks } from './data/tasks'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 export default function Tasks() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [tasks, setTasks] = useState(initialTasks); // Manage tasks state
 
-  const filteredData = tasks.filter(task =>
+  const [tasks, setTasks] = useState([]); // Manage tasks state
+
+
+function transformSkills(data:any) {
+  // Iterate over each object in the data array
+  return data.map(employee => {
+    // Check if the employee has a skills array
+    if (Array.isArray(employee.skills)) {
+      // Extract skill names from the skills array and join them with a comma separator
+      const skillNames = employee.skills.map(skill => skill.skillName).join(", ");
+      
+      // Replace the skills array with the concatenated skill names string
+      return {
+        ...employee,  // Spread the rest of the employee object
+        skills: skillNames // Update the skills field with the concatenated string
+      };
+    }
+    return employee; // Return employee unchanged if no skills array is present
+  });
+}
+
+useEffect(() => {
+  axios.get("http://localhost:8080/benched-employee")
+    .then(res => {
+      // Log the full response to verify it's an array
+      console.log('Full response array:', res.data);
+
+      const temp = transformSkills(res.data);
+      setTasks(temp);
+      
+    })
+    .catch(err => {
+      console.error("Error fetching data:", err);
+    });
+}, []);
+
+
+  const filteredData = tasks?.filter(task =>
     task.empId.toString().includes(searchTerm.toLowerCase()) ||
-    task.empName.toLowerCase().includes(searchTerm.toLowerCase())
+    task.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
