@@ -66,20 +66,21 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors()  // Enable CORS configuration
+                .cors() // Enable CORS configuration
                 .and()
-                .csrf(AbstractHttpConfigurer::disable)  // Disable CSRF
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(accessTokenEntryPoint)  // Handle unauthorized access
+                        .authenticationEntryPoint(accessTokenEntryPoint) // Handle unauthorized access
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // Stateless session management
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session management
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow preflight CORS requests
-                        .requestMatchers("/**").permitAll()  // Publicly accessible API endpoints
-//                        .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll()  // Swagger-related paths are publicly accessible
-                        .anyRequest().authenticated()  // All other requests require authentication
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight CORS requests
+                        .requestMatchers("/**").permitAll() // Publicly accessible API endpoints
+                        // .requestMatchers(HttpMethod.GET, AUTH_WHITELIST).permitAll() //
+                        // Swagger-related paths are publicly accessible
+                        .anyRequest().authenticated() // All other requests require authentication
                 );
 
         http.addFilterBefore(accessTokenFilter(), UsernamePasswordAuthenticationFilter.class);

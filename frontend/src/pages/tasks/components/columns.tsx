@@ -11,7 +11,7 @@ export const columns: ColumnDef<Task>[] = [
     enableColumnFilter: false,
   },
   {
-    accessorKey: 'empName',
+    accessorKey: 'name',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Emp Name' />
     ),
@@ -29,7 +29,7 @@ export const columns: ColumnDef<Task>[] = [
     ),
   },
   {
-    accessorKey: 'accoliteDOJ',
+    accessorKey: 'doj',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Accolite DOJ' />
     ),
@@ -47,7 +47,7 @@ export const columns: ColumnDef<Task>[] = [
     ),
   },
   {
-    accessorKey: 'clientName',
+    accessorKey: 'client',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Client Name' />
     ),
@@ -59,7 +59,7 @@ export const columns: ColumnDef<Task>[] = [
     ),
   },
   {
-    accessorKey: 'benchDOJ',
+    accessorKey: 'benchedOn',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Bench DOJ' />
     ),
