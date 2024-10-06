@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BenchedEmployeeRepository extends MongoRepository<BenchedEmployee, String> {
     Optional<BenchedEmployee> findByEmpId(String empId);
+
+
 }

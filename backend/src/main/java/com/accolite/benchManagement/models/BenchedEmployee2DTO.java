@@ -20,4 +20,5 @@ public class BenchedEmployee2DTO {
     private String benchedOn;
     private Integer experience;
     private Boolean isDeleted;
+    private String status;
 }

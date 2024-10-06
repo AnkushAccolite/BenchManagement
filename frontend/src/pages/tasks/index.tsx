@@ -4,7 +4,6 @@ import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
-// import { tasks as initialTasks } from './data/tasks'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
@@ -41,6 +40,7 @@ useEffect(() => {
       const temp = transformSkills(res.data);
       setTasks(temp);
       
+      
     })
     .catch(err => {
       console.error("Error fetching data:", err);
@@ -48,10 +48,11 @@ useEffect(() => {
 }, []);
 
 
-  const filteredData = tasks?.filter(task =>
-    task.empId.toString().includes(searchTerm.toLowerCase()) ||
-    task.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const filteredData = tasks?.filter(task =>
+  task.empId?.toString().includes(searchTerm || '') ||  
+  task.name?.toLowerCase().includes(searchTerm?.toLowerCase() || '')
+);
+
 
   return (
     <Layout>

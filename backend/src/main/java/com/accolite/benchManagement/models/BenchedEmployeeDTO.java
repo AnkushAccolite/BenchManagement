@@ -18,6 +18,6 @@ public class BenchedEmployeeDTO {
     private String baseLocation;
     private String client;
     private String benchedOn;
-    private List<String> skills;
+    private String skills;
     private Integer experience;
 }

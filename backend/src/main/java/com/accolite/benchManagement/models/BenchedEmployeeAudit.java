@@ -36,11 +36,7 @@ public class BenchedEmployeeAudit {
 
     private Integer experience;
 
-//    // List of skills associated with the benched employee
-//    @DBRef
-//    private List<Skill> skills;
-
-//    private Boolean isDeleted;
+    private String status;
 
     private LocalDateTime revisionDate;
 

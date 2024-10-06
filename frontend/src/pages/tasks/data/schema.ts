@@ -11,7 +11,8 @@ export const taskSchema = z.object({
   client: z.string(),
   ageing: z.string(),
   benchedOn: z.string(),
-  isDeleted:z.boolean()
+  isDeleted:z.boolean(),
+  
 })
 
 export type Task = z.infer<typeof taskSchema>

@@ -2,6 +2,7 @@ import { Layout } from '@/components/custom/layout'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
 import React, { useState } from 'react';
+import axios from 'axios';
 
 // Sample data for client names
 const clientNames = ['Morgan Stanely', 'Goldman Sachs', 'Fidelity','J.P Morgan','British Telecom'];
@@ -9,13 +10,13 @@ const clientNames = ['Morgan Stanely', 'Goldman Sachs', 'Fidelity','J.P Morgan',
 export default function AddEmployee() {
     const [formData, setFormData] = useState({
         empId: '',
-        empName: '',
+        name: '',
         skills: '',
         experience: 0,
-        accoliteDOJ: '',
+        doj: '',
         baseLocation: '',
-        clientName: '',
-        benchDOJ: '',
+        client: '',
+        benchedOn: '',
     });
 
     const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -32,6 +33,11 @@ export default function AddEmployee() {
     
         if (confirmed) {
             console.log('Form Data:', formData);
+            if (formData.benchedOn) {
+                const date = new Date(formData.benchedOn);
+                formData.benchedOn = date.toLocaleDateString('en-GB').replace(/\//g, '-'); // Formats date as dd/MM/yyyy
+            }
+             axios.post("http://localhost:8080/benched-employee",formData).then(()=>{}).catch(error=>console.log(error));
             // Handle form submission here (e.g., send data to backend)
         }
     };
@@ -76,9 +82,9 @@ export default function AddEmployee() {
                                     <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                                         <input
                                             type="text"
-                                            id="empName"
-                                            name="empName"
-                                            value={formData.empName}
+                                            id="name"
+                                            name="name"
+                                            value={formData.name}
                                             onChange={handleChange}
                                             className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-indigo-500 dark:bg-gray-900 dark:text-white dark:border-gray-600"
                                             placeholder="Enter Emp Name"
@@ -128,9 +134,9 @@ export default function AddEmployee() {
                                     <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                                         <input
                                             type="date"
-                                            id="accoliteDOJ"
-                                            name="accoliteDOJ"
-                                            value={formData.accoliteDOJ}
+                                            id="doj"
+                                            name="doj"
+                                            value={formData.doj}
                                             onChange={handleChange}
                                             className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-indigo-500 dark:bg-gray-900 dark:text-white dark:border-gray-600"
                                             required
@@ -160,9 +166,9 @@ export default function AddEmployee() {
                                     <td className="px-4 py-2 border border-gray-300 font-semibold text-black dark:text-white dark:border-gray-600">Client Name</td>
                                     <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                                         <select
-                                            id="clientName"
-                                            name="clientName"
-                                            value={formData.clientName}
+                                            id="client"
+                                            name="client"
+                                            value={formData.client}
                                             onChange={handleChange}
                                             className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-indigo-500 dark:bg-gray-900 dark:text-white dark:border-gray-600"
                                             required
@@ -183,9 +189,9 @@ export default function AddEmployee() {
                                     <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
                                         <input
                                             type="date"
-                                            id="benchDOJ"
-                                            name="benchDOJ"
-                                            value={formData.benchDOJ}
+                                            id="benchedOn"
+                                            name="benchedOn"
+                                            value={formData.benchedOn}
                                             onChange={handleChange}
                                             className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-indigo-500 dark:bg-gray-900 dark:text-white dark:border-gray-600"
                                             required

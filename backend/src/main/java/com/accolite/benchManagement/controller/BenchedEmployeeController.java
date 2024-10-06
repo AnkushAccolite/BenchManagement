@@ -4,8 +4,6 @@ import com.accolite.benchManagement.models.*;
 import com.accolite.benchManagement.repository.BenchedAuditRepo;
 import com.accolite.benchManagement.repository.BenchedEmployeeRepository;
 import com.accolite.benchManagement.repository.SkillRepository;
-import lombok.NonNull;
-import org.javers.spring.annotation.JaversAuditable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +30,7 @@ public class BenchedEmployeeController {
 
     @GetMapping
     public ResponseEntity<?> getAll(){
+
         List<BenchedEmployee> benchedEmployees = benchedEmployeeRepository.findAll().stream()
                 .filter(employee -> !employee.getIsDeleted())
                 .collect(Collectors.toList());
@@ -42,7 +41,7 @@ public class BenchedEmployeeController {
     public ResponseEntity<?> addBenchedEmployee(@RequestBody BenchedEmployeeDTO benchedEmployeeDTO){
         BenchedEmployee newBenchedEmployee = new BenchedEmployee(benchedEmployeeDTO.getName(),benchedEmployeeDTO.getEmpId(),benchedEmployeeDTO.getDoj(),benchedEmployeeDTO.getBaseLocation(),benchedEmployeeDTO.getClient(),benchedEmployeeDTO.getBenchedOn(),benchedEmployeeDTO.getExperience());
         List<Skill> tmp=new ArrayList<>();
-        List<String> skills=benchedEmployeeDTO.getSkills();
+        List<String> skills= List.of(benchedEmployeeDTO.getSkills().split(","));
         skills.forEach((skill)->{
             Optional<Skill> checkSkill= skillRepository.findBySkillName(skill);
             if(checkSkill.isPresent()){
@@ -73,13 +72,31 @@ public class BenchedEmployeeController {
         existingBenchedEmployee.setClient(benchedEmployee.getClient());
         existingBenchedEmployee.setBenchedOn(benchedEmployee.getBenchedOn());
         existingBenchedEmployee.setExperience(benchedEmployee.getExperience());
-        existingBenchedEmployee.calculateAgeing();
+        existingBenchedEmployee.getAgeing();
+        existingBenchedEmployee.setStatus(benchedEmployee.getStatus());
         existingBenchedEmployee.setIsDeleted(benchedEmployee.getIsDeleted());
+//        existingBenchedEmployee.setStatus(benchedEmployee.getStatus());
+        benchedEmployeeRepository.save(existingBenchedEmployee);
+//        Optional<BenchedEmployeeAudit> latestAuditRecord = benchedAuditRepo.findByEmpId(benchedEmployeeId);
+//        int revisionCount = latestAuditRecord.map(BenchedEmployeeAudit::getNo_of_revisions).orElse(0);
+//
+//        // Create a new audit record with the incremented revision number
+//        BenchedEmployeeAudit newAudit = new BenchedEmployeeAudit();
+//        newAudit.setEmpId(benchedEmployeeId);
+//        newAudit.setClient(benchedEmployee.getClient());
+//        newAudit.setBenchedOn(benchedEmployee.getBenchedOn());
+//        newAudit.setDoj(benchedEmployee.getDoj());
+//        newAudit.setBaseLocation(benchedEmployee.getBaseLocation());
+//        newAudit.setName(benchedEmployee.getName());
+//        newAudit.setStatus(benchedEmployee.getStatus());
+//        newAudit.setNo_of_revisions(revisionCount + 1);  // Increment the revision count
+//        newAudit.setRevisionDate(LocalDateTime.now());  // Automatically records the time of the change
+//        benchedAuditRepo.save(newAudit);
 
         Optional<BenchedEmployeeAudit> latestAuditRecord = benchedAuditRepo.findByEmpId(benchedEmployeeId);
         int revisionCount = latestAuditRecord.map(BenchedEmployeeAudit::getNo_of_revisions).orElse(0);
 
-        // Create a new audit record with the incremented revision number
+        // Create a new audit record with incremented revision number
         BenchedEmployeeAudit newAudit = new BenchedEmployeeAudit();
         newAudit.setEmpId(benchedEmployeeId);
         newAudit.setClient(benchedEmployee.getClient());
@@ -87,9 +104,14 @@ public class BenchedEmployeeController {
         newAudit.setDoj(benchedEmployee.getDoj());
         newAudit.setBaseLocation(benchedEmployee.getBaseLocation());
         newAudit.setName(benchedEmployee.getName());
+        newAudit.setStatus(benchedEmployee.getStatus());
         newAudit.setNo_of_revisions(revisionCount + 1);  // Increment the revision count
         newAudit.setRevisionDate(LocalDateTime.now());  // Automatically records the time of the change
+
+        // Save the new audit record
         benchedAuditRepo.save(newAudit);
+
+
         return ResponseEntity.ok("Client updated successfully");
     }
 
