@@ -16,7 +16,6 @@ public class BenchedEmployeeDTO {
     private String empId;
     private String doj;
     private String baseLocation;
-    private String client;
     private String benchedOn;
     private String skills;
     private Integer experience;

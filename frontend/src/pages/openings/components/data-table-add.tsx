@@ -277,6 +277,7 @@ export default function AddProject() {
       const projects = data.map((project) => ({
         id: project.projectId,
         name: project.projectName,
+        clientName: project.clientName,
       }))
       const clients = data.map((project) => project.clientName)
 
@@ -387,11 +388,15 @@ export default function AddProject() {
                       required
                     >
                       <option value=''>Select a project</option>
-                      {projectNames.map((project, index) => (
-                        <option key={index} value={project.id}>
-                          {project.name}
-                        </option>
-                      ))}
+                      {projectNames
+                        .filter(
+                          (proj) => proj.clientName === formData.clientName
+                        )
+                        .map((project, index) => (
+                          <option key={index} value={project.id}>
+                            {project.name}
+                          </option>
+                        ))}
                     </select>
                   </td>
                 </tr>

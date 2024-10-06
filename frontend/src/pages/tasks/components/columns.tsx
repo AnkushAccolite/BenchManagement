@@ -4,6 +4,26 @@ import { DataTableColumnHeader } from './data-table-column-header'
 
 export const columns: ColumnDef<Task>[] = [
   {
+    id: 'select', // This column does not need an accessorKey
+    header: ({ table }) => (
+      <input
+        type='checkbox'
+        checked={table.getIsAllRowsSelected()}
+        onChange={table.getToggleAllRowsSelectedHandler()}
+      />
+    ),
+    cell: ({ row }) => (
+      <input
+        type='checkbox'
+        checked={row.getIsSelected()}
+        onChange={row.getToggleSelectedHandler()}
+      />
+    ),
+    enableSorting: false, // Disable sorting for the selection column
+    enableColumnFilter: false, // Disable filtering for the selection column
+    size: 48, // Set a fixed width for the selection column
+  },
+  {
     accessorKey: 'empId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Emp Id' />

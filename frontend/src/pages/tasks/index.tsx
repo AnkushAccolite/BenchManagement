@@ -6,53 +6,97 @@ import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import axiosInstance from '@/lib/axios'
 
 export default function Tasks() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const [tasks, setTasks] = useState([]); // Manage tasks state
+  const [tasks, setTasks] = useState([]) // Manage tasks state
 
-
-function transformSkills(data:any) {
-  // Iterate over each object in the data array
-  return data.map(employee => {
-    // Check if the employee has a skills array
-    if (Array.isArray(employee.skills)) {
-      // Extract skill names from the skills array and join them with a comma separator
-      const skillNames = employee.skills.map(skill => skill.skillName).join(", ");
-      
-      // Replace the skills array with the concatenated skill names string
-      return {
-        ...employee,  // Spread the rest of the employee object
-        skills: skillNames // Update the skills field with the concatenated string
-      };
-    }
-    return employee; // Return employee unchanged if no skills array is present
-  });
-}
-
-useEffect(() => {
-  axios.get("http://localhost:8080/benched-employee")
-    .then(res => {
-      // Log the full response to verify it's an array
-      console.log('Full response array:', res.data);
-
-      const temp = transformSkills(res.data);
-      setTasks(temp);
-      
-      
+  function transformSkills(data: any) {
+    return data.map((employee) => {
+      if (Array.isArray(employee.skills)) {
+        const skillNames = employee.skills
+          .map((skill) => skill.skillName)
+          .join(', ')
+        return {
+          ...employee,
+          skills: skillNames,
+        }
+      }
+      return employee
     })
-    .catch(err => {
-      console.error("Error fetching data:", err);
-    });
-}, []);
+  }
 
+  function transformStatus(status) {
+    return status
+      .toLowerCase()
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  }
 
-const filteredData = tasks?.filter(task =>
-  task.empId?.toString().includes(searchTerm || '') ||  
-  task.name?.toLowerCase().includes(searchTerm?.toLowerCase() || '')
-);
+  useEffect(() => {
+    const fetchBenchedEmployees = async () => {
+      try {
+        // Fetch benched employees
+        const benchedEmployeesRes = await axiosInstance.get('/benched-employee')
+        const benchedEmployees = benchedEmployeesRes.data
 
+        // Fetch project requirement summary
+        const projectRequirementRes = await axiosInstance.get(
+          '/project-requirement/summary'
+        )
+        const projectRequirements = projectRequirementRes.data
+
+        // Log full responses for debugging purposes
+        // console.log('Benched Employees:', benchedEmployees)
+        // console.log('Project Requirements:', projectRequirements)
+
+        // Transform the benched employees data to update status and client based on project requirements
+        const updatedBenchedEmployees = benchedEmployees.map((employee) => {
+          let updatedStatus = employee.status
+          let updatedClient = employee.client
+
+          // Loop through each project requirement and check if the employee id is in interviewScheduled or selectedEmployees
+          projectRequirements.forEach((req) => {
+            if (req.interviewScheduled.includes(employee.id)) {
+              updatedStatus = 'INTERVIEW_SCHEDULED'
+              updatedClient = req.id
+            } else if (req.selectedEmployees.includes(employee.id)) {
+              updatedStatus =
+                employee.status !== 'ONBOARDED'
+                  ? 'ONBOARDING_IN_PROGRESS'
+                  : 'ONBOARDED'
+              updatedClient = req.id
+            }
+          })
+
+          // Return the employee object with updated status and client
+          return {
+            ...employee,
+            status: transformStatus(updatedStatus),
+            client: updatedClient,
+          }
+        })
+
+        // Update the state with the transformed benched employees data
+        // console.log('Updated Benched Employees:', updatedBenchedEmployees)
+        const temp = transformSkills(updatedBenchedEmployees)
+        setTasks(temp) // Assuming setTasks is used to update the state of the benched employees
+      } catch (err) {
+        console.error('Error fetching data:', err)
+      }
+    }
+
+    fetchBenchedEmployees()
+  }, [])
+
+  const filteredData = tasks?.filter(
+    (task) =>
+      task.empId?.toString().includes(searchTerm || '') ||
+      task.name?.toLowerCase().includes(searchTerm?.toLowerCase() || '')
+  )
 
   return (
     <Layout>

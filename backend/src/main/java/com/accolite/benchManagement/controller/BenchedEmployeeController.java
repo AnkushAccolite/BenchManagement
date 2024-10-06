@@ -5,6 +5,7 @@ import com.accolite.benchManagement.repository.BenchedAuditRepo;
 import com.accolite.benchManagement.repository.BenchedEmployeeRepository;
 import com.accolite.benchManagement.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +40,7 @@ public class BenchedEmployeeController {
 
     @PostMapping
     public ResponseEntity<?> addBenchedEmployee(@RequestBody BenchedEmployeeDTO benchedEmployeeDTO){
-        BenchedEmployee newBenchedEmployee = new BenchedEmployee(benchedEmployeeDTO.getName(),benchedEmployeeDTO.getEmpId(),benchedEmployeeDTO.getDoj(),benchedEmployeeDTO.getBaseLocation(),benchedEmployeeDTO.getClient(),benchedEmployeeDTO.getBenchedOn(),benchedEmployeeDTO.getExperience());
+        BenchedEmployee newBenchedEmployee = new BenchedEmployee(benchedEmployeeDTO.getName(),benchedEmployeeDTO.getEmpId(),benchedEmployeeDTO.getDoj(),benchedEmployeeDTO.getBaseLocation(),benchedEmployeeDTO.getBenchedOn(),benchedEmployeeDTO.getExperience());
         List<Skill> tmp=new ArrayList<>();
         List<String> skills= List.of(benchedEmployeeDTO.getSkills().split(","));
         skills.forEach((skill)->{
@@ -69,29 +70,13 @@ public class BenchedEmployeeController {
         existingBenchedEmployee.setName(benchedEmployee.getName());
         existingBenchedEmployee.setDoj(benchedEmployee.getDoj());
         existingBenchedEmployee.setBaseLocation(benchedEmployee.getBaseLocation());
-        existingBenchedEmployee.setClient(benchedEmployee.getClient());
         existingBenchedEmployee.setBenchedOn(benchedEmployee.getBenchedOn());
         existingBenchedEmployee.setExperience(benchedEmployee.getExperience());
         existingBenchedEmployee.getAgeing();
-        existingBenchedEmployee.setStatus(benchedEmployee.getStatus());
+//        existingBenchedEmployee.setStatus(benchedEmployee.getStatus());
         existingBenchedEmployee.setIsDeleted(benchedEmployee.getIsDeleted());
 //        existingBenchedEmployee.setStatus(benchedEmployee.getStatus());
         benchedEmployeeRepository.save(existingBenchedEmployee);
-//        Optional<BenchedEmployeeAudit> latestAuditRecord = benchedAuditRepo.findByEmpId(benchedEmployeeId);
-//        int revisionCount = latestAuditRecord.map(BenchedEmployeeAudit::getNo_of_revisions).orElse(0);
-//
-//        // Create a new audit record with the incremented revision number
-//        BenchedEmployeeAudit newAudit = new BenchedEmployeeAudit();
-//        newAudit.setEmpId(benchedEmployeeId);
-//        newAudit.setClient(benchedEmployee.getClient());
-//        newAudit.setBenchedOn(benchedEmployee.getBenchedOn());
-//        newAudit.setDoj(benchedEmployee.getDoj());
-//        newAudit.setBaseLocation(benchedEmployee.getBaseLocation());
-//        newAudit.setName(benchedEmployee.getName());
-//        newAudit.setStatus(benchedEmployee.getStatus());
-//        newAudit.setNo_of_revisions(revisionCount + 1);  // Increment the revision count
-//        newAudit.setRevisionDate(LocalDateTime.now());  // Automatically records the time of the change
-//        benchedAuditRepo.save(newAudit);
 
         Optional<BenchedEmployeeAudit> latestAuditRecord = benchedAuditRepo.findByEmpId(benchedEmployeeId);
         int revisionCount = latestAuditRecord.map(BenchedEmployeeAudit::getNo_of_revisions).orElse(0);
@@ -99,7 +84,7 @@ public class BenchedEmployeeController {
         // Create a new audit record with incremented revision number
         BenchedEmployeeAudit newAudit = new BenchedEmployeeAudit();
         newAudit.setEmpId(benchedEmployeeId);
-        newAudit.setClient(benchedEmployee.getClient());
+//        newAudit.setClient(benchedEmployee.getClient());
         newAudit.setBenchedOn(benchedEmployee.getBenchedOn());
         newAudit.setDoj(benchedEmployee.getDoj());
         newAudit.setBaseLocation(benchedEmployee.getBaseLocation());
@@ -115,6 +100,26 @@ public class BenchedEmployeeController {
         return ResponseEntity.ok("Client updated successfully");
     }
 
+    @PutMapping("/change-status/{status}")
+    public ResponseEntity<String> changeStatus(
+            @PathVariable("status") String status,
+            @RequestBody List<String> ids) {
 
+        try {
+
+            // Update the status for the given list of IDs
+            List<BenchedEmployee> employees = benchedEmployeeRepository.findAllById(ids);
+            for (BenchedEmployee employee : employees) {
+                employee.setStatus(Status.valueOf(status));
+            }
+            List<BenchedEmployee> updatedEmployees= benchedEmployeeRepository.saveAll(employees);
+
+            return ResponseEntity.ok("Status updated for " + updatedEmployees.size() + " employees.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid status: " + status);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
 
 }

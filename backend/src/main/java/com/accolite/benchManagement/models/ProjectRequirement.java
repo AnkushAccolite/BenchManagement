@@ -4,6 +4,9 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Document(collection = "project_requirements")
 public class ProjectRequirement {
@@ -18,6 +21,10 @@ public class ProjectRequirement {
     private String skills;
 
     private Integer openings;
+
+    private List<String> interviewScheduled = new ArrayList<>();
+    private List<String> selectedEmployees = new ArrayList<>();
+
 
 
     public ProjectRequirement(String projectId, String skills,String clientName, Integer openings) {
