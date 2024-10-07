@@ -154,6 +154,8 @@ export function DataTableViewOptions<TData>({
       console.log(error)
     }
   }
+
+  const isAnyRowSelected = table.getSelectedRowModel().rows.length > 0
   return (
     <div className='flex items-center'>
       <DropdownMenu>
@@ -205,6 +207,7 @@ export function DataTableViewOptions<TData>({
       <Dialog>
         <DialogTrigger asChild>
           <Button
+          disabled={!isAnyRowSelected}
             // onClick={handleChangeStatusClick}
             variant='outline'
             size='sm'
