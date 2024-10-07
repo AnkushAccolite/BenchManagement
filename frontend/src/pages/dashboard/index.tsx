@@ -47,7 +47,7 @@ export default function Dashboard() {
 
     const calculateTotalOpenings = async () => {
       try {
-        const response = await axiosInstance.get('/project-requirement'); // Assuming this endpoint provides openings
+        const response = await axiosInstance.get('/project-requirement'); 
         const openingsData = response.data;
         const totalOpenings = openingsData.reduce((sum: any, opening: { openings: any; }) => sum + (opening.openings || 0), 0);
         setTotalOpenings(totalOpenings);
@@ -118,7 +118,7 @@ export default function Dashboard() {
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>Monthly Employee Onboarding Overview</CardTitle>
+                  <CardTitle>Client Project Overview</CardTitle>
                 </CardHeader>
                 <CardContent className='pl-2 pt-8'>
                   <Overview />
