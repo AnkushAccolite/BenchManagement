@@ -17,11 +17,6 @@ export const statuses = [
     icon: QuestionMarkCircledIcon,
   },
   {
-    value: 'interview_in_progress',
-    label: 'Interview in Progress',
-    icon: CircleIcon,
-  },
-  {
     value: 'onboarding_in_progress',
     label: 'Onboarding in Progress',
     icon: StopwatchIcon,
@@ -30,6 +25,11 @@ export const statuses = [
     value: 'resigned',
     label: 'Resigned',
     icon: CheckCircledIcon,
+  },
+  {
+    value: 'interview_scheduled',
+    label: 'Interview Scheduled',
+    icon: QuestionMarkCircledIcon,
   },
   {
     value: 'onboarded',

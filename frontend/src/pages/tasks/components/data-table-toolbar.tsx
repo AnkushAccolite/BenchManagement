@@ -7,7 +7,7 @@ import { DataTableViewOptions } from '../components/data-table-view-options'
 
 const statusOptions = [
   { value: 'under_evaluation', label: 'Under Evaluation' },
-  { value: 'interview_in_progress', label: 'Interview in Progress' },
+  { value: 'interview_scheduled', label: 'Interview Scheduled' },
   { value: 'onboarding_in_progress', label: 'Onboarding in Progress' },
   { value: 'resigned', label: 'Resigned' },
   { value: 'onboarded', label: 'Onboarded' },
