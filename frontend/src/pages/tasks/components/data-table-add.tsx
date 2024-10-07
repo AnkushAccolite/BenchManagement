@@ -5,20 +5,23 @@ import { useState } from 'react';
 import axios from 'axios';
 
 // Sample data for client names
-const clientNames = ['Morgan Stanely', 'Goldman Sachs', 'Fidelity','J.P Morgan','British Telecom'];
+const clientNames = ['Morgan Stanley', 'Goldman Sachs', 'Fidelity', 'J.P. Morgan', 'British Telecom'];
+
+// Define initial form data
+const initialFormData = {
+    empId: '',
+    name: '',
+    skills: '',
+    experience: 0,
+    doj: '',
+    baseLocation: '',
+    benchedOn: '',
+};
 
 export default function AddEmployee() {
-    const [formData, setFormData] = useState({
-        empId: '',
-        name: '',
-        skills: '',
-        experience: 0,
-        doj: '',
-        baseLocation: '',
-        benchedOn: '',
-    });
+    const [formData, setFormData] = useState(initialFormData);
 
-    const handleChange = (e: { target: { name: any; value: any; }; }) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({
             ...prevState,
@@ -26,18 +29,22 @@ export default function AddEmployee() {
         }));
     };
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const confirmed = window.confirm('Please confirm your submission.');
-    
+
         if (confirmed) {
             console.log('Form Data:', formData);
             if (formData.benchedOn) {
                 const date = new Date(formData.benchedOn);
                 formData.benchedOn = date.toLocaleDateString('en-GB').replace(/\//g, '-'); // Formats date as dd/MM/yyyy
             }
-            axios.post("http://localhost:8080/benched-employee", formData).then(() => {}).catch(error => console.log(error));
-            // Handle form submission here (e.g., send data to backend)
+            axios.post("http://localhost:8080/benched-employee", formData)
+                .then(() => {
+                    // Reset the form to initial values
+                    setFormData(initialFormData);
+                })
+                .catch(error => console.log(error));
         }
     };
 
@@ -52,7 +59,6 @@ export default function AddEmployee() {
 
             <Layout.Body>
                 <div className="shadow-md rounded-md p-8 -mt-1">
-
                     <h2 className="text-xl font-semibold mb-8 text-center text-black dark:text-white">Add Employee to Bench</h2>
 
                     <form onSubmit={handleSubmit}>
@@ -74,7 +80,7 @@ export default function AddEmployee() {
                                         />
                                     </td>
                                 </tr>
-                                
+
                                 {/* Emp Name */}
                                 <tr>
                                     <td className="px-4 py-2 border border-gray-300 font-semibold text-black dark:text-white dark:border-gray-600">Emp Name</td>
