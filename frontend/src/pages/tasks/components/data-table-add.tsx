@@ -1,6 +1,6 @@
-import { Layout } from '@/components/custom/layout'
-import ThemeSwitch from '@/components/theme-switch'
-import { UserNav } from '@/components/user-nav'
+import { Layout } from '@/components/custom/layout';
+import ThemeSwitch from '@/components/theme-switch';
+import { UserNav } from '@/components/user-nav';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -15,7 +15,6 @@ export default function AddEmployee() {
         experience: 0,
         doj: '',
         baseLocation: '',
-        client: '',
         benchedOn: '',
     });
 
@@ -37,7 +36,7 @@ export default function AddEmployee() {
                 const date = new Date(formData.benchedOn);
                 formData.benchedOn = date.toLocaleDateString('en-GB').replace(/\//g, '-'); // Formats date as dd/MM/yyyy
             }
-             axios.post("http://localhost:8080/benched-employee",formData).then(()=>{}).catch(error=>console.log(error));
+            axios.post("http://localhost:8080/benched-employee", formData).then(() => {}).catch(error => console.log(error));
             // Handle form submission here (e.g., send data to backend)
         }
     };
@@ -158,28 +157,6 @@ export default function AddEmployee() {
                                             placeholder="Enter Base Location"
                                             required
                                         />
-                                    </td>
-                                </tr>
-
-                                {/* Client Name */}
-                                <tr>
-                                    <td className="px-4 py-2 border border-gray-300 font-semibold text-black dark:text-white dark:border-gray-600">Client Name</td>
-                                    <td className="px-4 py-2 border border-gray-300 dark:border-gray-600">
-                                        <select
-                                            id="client"
-                                            name="client"
-                                            value={formData.client}
-                                            onChange={handleChange}
-                                            className="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-indigo-500 dark:bg-gray-900 dark:text-white dark:border-gray-600"
-                                            required
-                                        >
-                                            <option value="">Select a Client</option>
-                                            {clientNames.map((client, index) => (
-                                                <option key={index} value={client}>
-                                                    {client}
-                                                </option>
-                                            ))}
-                                        </select>
                                     </td>
                                 </tr>
 

@@ -47,6 +47,9 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Experience' />
     ),
+    cell: ({ getValue }) => (
+      <div className='text-center'>{getValue()}</div> // Center align content
+    ),
   },
   {
     accessorKey: 'doj',
@@ -69,13 +72,16 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'client',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Client Name' />
+      <DataTableColumnHeader column={column} title='Opening ID' />
     ),
   },
   {
     accessorKey: 'ageing',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Ageing' />
+    ),
+    cell: ({ getValue }) => (
+      <div className='text-center'>{getValue()}</div> // Center align content
     ),
   },
   {
