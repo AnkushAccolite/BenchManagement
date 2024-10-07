@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ThemeSwitch from '@/components/theme-switch';
 import { UserNav } from '@/components/user-nav';
-import { RecentSales } from './components/recent-sales';
+import { RecentSales } from './components/emp-highlight';
 import { Overview } from './components/overview';
 import axiosInstance from '@/lib/axios';
 import { ClientData } from '../projects/components/data-table';
