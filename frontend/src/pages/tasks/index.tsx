@@ -60,10 +60,16 @@ export default function Tasks() {
 
           // Loop through each project requirement and check if the employee id is in interviewScheduled or selectedEmployees
           projectRequirements.forEach((req) => {
-            if (req.interviewScheduled.includes(employee.id)) {
+            if (
+              req.interviewScheduled.includes(employee.id) &&
+              employee.status === 'UNDER_EVALUATION'
+            ) {
               updatedStatus = 'INTERVIEW_SCHEDULED'
               updatedClient = req.id
-            } else if (req.selectedEmployees.includes(employee.id)) {
+            } else if (
+              req.selectedEmployees.includes(employee.id) &&
+              employee.status === 'UNDER_EVALUATION'
+            ) {
               updatedStatus =
                 employee.status !== 'ONBOARDED'
                   ? 'ONBOARDING_IN_PROGRESS'
