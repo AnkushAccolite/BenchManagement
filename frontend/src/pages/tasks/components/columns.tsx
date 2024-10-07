@@ -69,7 +69,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'client',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Client Name' />
+      <DataTableColumnHeader column={column} title='Opening Id' />
     ),
   },
   {

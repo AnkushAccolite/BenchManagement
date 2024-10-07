@@ -3,6 +3,7 @@ package com.accolite.benchManagement.controller;
 import com.accolite.benchManagement.models.*;
 import com.accolite.benchManagement.repository.BenchedAuditRepo;
 import com.accolite.benchManagement.repository.BenchedEmployeeRepository;
+import com.accolite.benchManagement.repository.ProjectRequirementRepository;
 import com.accolite.benchManagement.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,11 @@ public class BenchedEmployeeController {
 
     @Autowired
     private SkillRepository skillRepository;
+
+    @Autowired
+    private ProjectRequirementRepository projectRequirementRepository;
+
+
 
     @Autowired
     private BenchedAuditRepo benchedAuditRepo;
@@ -106,13 +112,24 @@ public class BenchedEmployeeController {
             @RequestBody List<String> ids) {
 
         try {
-
             // Update the status for the given list of IDs
             List<BenchedEmployee> employees = benchedEmployeeRepository.findAllById(ids);
             for (BenchedEmployee employee : employees) {
                 employee.setStatus(Status.valueOf(status));
             }
-            List<BenchedEmployee> updatedEmployees= benchedEmployeeRepository.saveAll(employees);
+            List<BenchedEmployee> updatedEmployees = benchedEmployeeRepository.saveAll(employees);
+
+            // Check if the status requires removing from project requirements
+            if (status.equals("UNDER_EVALUATION") || status.equals("RESIGNED") || status.equals("ON_MATERNITY")) {
+                for (String empId : ids) {
+                    List<ProjectRequirement> projectRequirements = projectRequirementRepository.findAll();
+                    for (ProjectRequirement projectRequirement : projectRequirements) {
+                        projectRequirement.getInterviewScheduled().remove(empId);
+                        projectRequirement.getSelectedEmployees().remove(empId);
+                        projectRequirementRepository.save(projectRequirement);
+                    }
+                }
+            }
 
             return ResponseEntity.ok("Status updated for " + updatedEmployees.size() + " employees.");
         } catch (IllegalArgumentException e) {
@@ -121,5 +138,6 @@ public class BenchedEmployeeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
-
 }
+
+

@@ -69,12 +69,16 @@ export default function AddProject() {
 
     try {
       e.preventDefault()
-      setFormData((prev) => (prev.skills = selectedSkills.join(', ')))
-      setFormData((prev) => {
-        delete prev.projectName
-        return prev
-      })
-      await axiosInstance.post('/project-requirement', formData)
+      let payload = formData
+      payload.skills = selectedSkills.join(', ')
+      delete payload.projectName
+      // setFormData((prev) => (prev.skills = selectedSkills.join(', ')))
+      // setFormData((prev) => {
+      //   delete prev.projectName
+      //   return prev
+      // })
+      // console.log('--->', formData)
+      await axiosInstance.post('/project-requirement', payload)
       alert('Opening added successfully!')
     } catch (error) {
       console.log(error)

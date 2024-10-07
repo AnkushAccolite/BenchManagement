@@ -1,11 +1,10 @@
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  // CaretSortIcon,
+  CaretSortIcon,
   EyeNoneIcon,
 } from '@radix-ui/react-icons';
 import { Column } from '@tanstack/react-table';
-
 import { Button } from '@/components/custom/button';
 import {
   DropdownMenu,
@@ -15,31 +14,29 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
 }
-
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
-  // Render the title without sorting options if the column can't be sorted
-  if (!column.getCanSort()) {
+  const sortableColumns = [
+    'Project Name',
+    'Client Name',
+    'Skills',
+    'Location',
+    'Opening ID',
+    'Openings'
+  ];
+  // Check if the column can be sorted based on its title
+  const canSortColumn = sortableColumns.includes(title);
+  if (!column.getCanSort() || !canSortColumn) {
     return <div className={cn(className)}>{title}</div>;
   }
-
-  // const sortingIcon = column.getIsSorted() === 'desc' ? (
-  //   <ArrowDownIcon className='ml-2 h-4 w-4' />
-  // ) : column.getIsSorted() === 'asc' ? (
-  //   <ArrowUpIcon className='ml-2 h-4 w-4' />
-  // ) : (
-  //   <CaretSortIcon className='ml-2 h-4 w-4' />
-  // );
-
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
@@ -48,10 +45,15 @@ export function DataTableColumnHeader<TData, TValue>({
             variant='ghost'
             size='sm'
             className='-ml-3 h-8 data-[state=open]:bg-accent'
-            onClick={() => column.toggleSorting()} // Toggle sorting on button click
           >
             <span>{title}</span>
-            {/* {sortingIcon} Only render sorting icon once */}
+            {column.getIsSorted() === 'desc' ? (
+              <ArrowDownIcon className='ml-2 h-4 w-4' />
+            ) : column.getIsSorted() === 'asc' ? (
+              <ArrowUpIcon className='ml-2 h-4 w-4' />
+            ) : (
+              <CaretSortIcon className='ml-2 h-4 w-4' />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start'>
