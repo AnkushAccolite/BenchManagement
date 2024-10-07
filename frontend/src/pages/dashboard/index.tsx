@@ -65,7 +65,7 @@ export default function Dashboard() {
 
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>200</div>
+                  <div className='text-2xl font-bold'>7</div>
                 </CardContent>
               </Card>
               <Card>
@@ -89,7 +89,7 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+190</div>
+                  <div className='text-2xl font-bold'>22</div>
                 </CardContent>
               </Card>
               <Card>
@@ -110,13 +110,13 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+20</div>
+                  <div className='text-2xl font-bold'>4</div>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Active Users
+                    Total Openings
                   </CardTitle>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -134,7 +134,7 @@ export default function Dashboard() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>10</div>
                 </CardContent>
               </Card>
             </div>

@@ -39,11 +39,6 @@ export function DataTableToolbar<TData>({
           onChange={handleFilterChange('skills')}
           className='h-8 w-[150px] lg:w-[200px]'
         />
-        <Input
-          placeholder='Filter by Experience...'
-          onChange={handleFilterChange('experience')}
-          className='h-8 w-[150px] lg:w-[200px]'
-        />
         {/* Simple dropdown for filtering by Status with the same styles as Input */}
         <select
           onChange={handleStatusChange}

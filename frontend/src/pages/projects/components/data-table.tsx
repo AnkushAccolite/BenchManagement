@@ -82,10 +82,6 @@ export function DataTable<TData extends ClientData, TValue>({
   const handleSave = async () => {
     if (tempData) {
       // console.log('-->', tempData)
-      const res = await axiosInstance.put(
-        `/project/update/${tempData.projectId}`,
-        tempData
-      )
       setData((prevData) =>
         prevData.map((item) => (item === editableRow ? tempData : item))
       )
