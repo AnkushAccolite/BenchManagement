@@ -6,7 +6,7 @@ interface Employee {
   empId: string;
   name: string;
   avatarUrl: string;
-  ageing: number; // Ensure this is the correct field that represents aging
+  ageing: number;
 }
 
 export function RecentSales() {
@@ -29,11 +29,11 @@ export function RecentSales() {
   };
 
   useEffect(() => {
-    fetchEmployees(); // Initial fetch
+    fetchEmployees();
 
-    const interval = setInterval(fetchEmployees, 5000); // Poll every 5 seconds
+    const interval = setInterval(fetchEmployees, 5000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
