@@ -1,7 +1,7 @@
 import { Layout } from '@/components/custom/layout'
 import ThemeSwitch from '@/components/theme-switch'
 import { UserNav } from '@/components/user-nav'
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 
 // Sample data for client names
