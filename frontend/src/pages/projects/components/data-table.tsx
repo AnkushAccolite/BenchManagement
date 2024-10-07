@@ -27,7 +27,7 @@ import { Button } from '@/components/custom/button'
 import { DataTableColumnHeader } from '../components/data-table-column-header'
 import axiosInstance from '@/lib/axios'
 
-interface ClientData {
+export interface ClientData {
   clientName: string
   projectName: string
   deptName: string
