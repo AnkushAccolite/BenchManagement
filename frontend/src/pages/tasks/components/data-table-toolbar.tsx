@@ -39,7 +39,6 @@ export function DataTableToolbar<TData>({
           onChange={handleFilterChange('skills')}
           className='h-8 w-[150px] lg:w-[200px]'
         />
-        {/* Simple dropdown for filtering by Status with the same styles as Input */}
         <select
           onChange={handleStatusChange}
           className='h-8 w-[150px] rounded-md border bg-transparent text-sm font-small text-muted-foreground placeholder:text-muted-foreground focus:border-blue-500 focus:ring-2 focus:ring-blue-500 lg:w-[200px]'
@@ -55,16 +54,12 @@ export function DataTableToolbar<TData>({
           ))}
         </select>
 
-        {/* <Input
-          placeholder='Filter by Ageing...'
-          onChange={handleFilterChange('ageing')}
-          className='h-8 w-[150px] lg:w-[200px]'
-        /> */}
         <Input
-          placeholder='Filter by Client Name...'
-          onChange={handleFilterChange('clientName')}
+          placeholder='Filter by Opening Id...'
+          onChange={handleFilterChange('client')}
           className='h-8 w-[150px] lg:w-[200px]'
         />
+
         {isFiltered && (
           <Button
             variant='ghost'

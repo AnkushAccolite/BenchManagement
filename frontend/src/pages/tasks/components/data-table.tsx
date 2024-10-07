@@ -29,6 +29,7 @@ import axios from 'axios'
 
 const statusOptions = [
   { value: 'under_evaluation', label: 'Under Evaluation' },
+
   { value: 'interview_scheduled', label: 'Interview Scheduled' },
   { value: 'onboarding_in_progress', label: 'Onboarding in Progress' },
   { value: 'resigned', label: 'Resigned' },

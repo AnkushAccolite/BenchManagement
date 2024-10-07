@@ -12,6 +12,7 @@ export const taskSchema = z.object({
   ageing: z.string(),
   benchedOn: z.string(),
   isDeleted:z.boolean(),
+  actions:z.string(),
   
 })
 
