@@ -30,7 +30,7 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${isCollapsed ? 'md:w-14' : 'md:w-64'}`,
+        `fixed left-0 right-0 top-0 z-50 w-full border-r-2 border-r-muted transition-[width] md:bottom-0 md:right-auto md:h-svh ${isCollapsed ? 'md:w-14' : 'md:w-60'}`,
         className
       )}
     >
@@ -53,7 +53,7 @@ export default function Sidebar({
               version="1.1"
               xmlnsXlink="http://www.w3.org/1999/xlink"
               xmlnsSvgjs="http://svgjs.com/svgjs"
-              width={isCollapsed ? '24' : '32'}  // Dynamic sizing based on collapse state
+              width={isCollapsed ? '24' : '28'}  // Dynamic sizing based on collapse state
               height={isCollapsed ? '24' : '32'}
               viewBox="0 0 64 64"
               className="transition-all"
