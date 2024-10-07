@@ -12,7 +12,7 @@ export const columns: ColumnDef<Projects>[] = [
     cell: ({ row }) => (
       <div className='w-[80px]'>{row.getValue('projectId')}</div>
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
