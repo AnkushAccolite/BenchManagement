@@ -1,7 +1,6 @@
 import {
   IconBriefcase,
   IconLayoutDashboard,
-  IconSettings,
   IconBook,
   IconNotebook,
   
@@ -42,11 +41,5 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/projects',
     icon: <IconNotebook size={18} />,
-  },
-  {
-    title: 'Settings',
-    label: '',
-    href: '/settings',
-    icon: <IconSettings size={18} />,
   },
 ]
