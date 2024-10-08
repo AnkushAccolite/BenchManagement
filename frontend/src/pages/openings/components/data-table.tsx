@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,7 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table';
 
 import {
   Table,
@@ -19,28 +19,29 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/table';
 
-import { DataTablePagination } from '../components/data-table-pagination'
-import { DataTableToolbar } from '../components/data-table-toolbar'
-import { Button } from '@/components/custom/button'
-import { DataTableColumnHeader } from '../components/data-table-column-header'
-import axiosInstance from '@/lib/axios'
+import { DataTablePagination } from '../components/data-table-pagination';
+import { DataTableToolbar } from '../components/data-table-toolbar';
+import { Button } from '@/components/custom/button';
+import { DataTableColumnHeader } from '../components/data-table-column-header';
+import axiosInstance from '@/lib/axios';
 
 interface ClientData {
-  clientName: string
-  id: string
-  openings: number
-  projectId: string
-  skills: string
-  location: string
-  projectName: string
+  clientName: string;
+  id: string;
+  openings: number;
+  projectId: string;
+  skills: string;
+  location: string;
+  projectName: string;
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  setData: React.Dispatch<React.SetStateAction<TData[]>>
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  setData: React.Dispatch<React.SetStateAction<TData[]>>;
+  fetch: () => void;
 }
 
 export function DataTable<TData extends ClientData, TValue>({
@@ -49,12 +50,13 @@ export function DataTable<TData extends ClientData, TValue>({
   setData,
   fetch,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [editableRow, setEditableRow] = useState<TData | null>(null)
-  const [tempData, setTempData] = useState<TData | null>(null)
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [editableRow, setEditableRow] = useState<TData | null>(null);
+  const [tempData, setTempData] = useState<TData | null>(null);
+  const [showActions, setShowActions] = useState<{ [key: string]: boolean }>({}); // State to show/hide actions
 
   const table = useReactTable({
     data,
@@ -74,7 +76,7 @@ export function DataTable<TData extends ClientData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  })
+  });
 
   const handleEdit = (row: TData) => {
     setEditableRow(row)
@@ -83,24 +85,18 @@ export function DataTable<TData extends ClientData, TValue>({
 
   const handleSave = async () => {
     if (tempData) {
-      // setTempData((prev) => {
-      //   delete prev.location
-      //   delete prev.projectName
-      //   return prev
-      // })
-      await axiosInstance.put(
-        `/project-requirement/update/${tempData.id}`,
-        tempData
+      setData((prevData) =>
+        prevData.map((item) => (item === editableRow ? tempData : item))
       )
-      fetch()
       setEditableRow(null)
-      setTempData(null)
+      collapseActions() // Collapse after saving
     }
   }
 
   const handleCancel = () => {
     setEditableRow(null)
     setTempData(null)
+    collapseActions() // Collapse after cancelling
   }
 
   const handleChange = (key: keyof TData, value: any) => {
@@ -111,11 +107,25 @@ export function DataTable<TData extends ClientData, TValue>({
 
   const handleDelete = async (row: TData) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
-      await axiosInstance.delete(`/project-requirement/delete/${row.id}`)
-      fetch()
+      await axiosInstance.delete(`/project/delete/${row.projectId}`)
+      setData((prevData) => prevData.filter((item) => item !== row))
+      collapseActions() // Collapse after deleting
+      console.log('Deleted:', row)
     }
   }
 
+  // Function to collapse all actions after any operation
+   // Function to collapse all actions after any operation
+   const collapseActions = () => {
+    setShowActions({})
+  }
+
+  const toggleActions = (rowId: string) => {
+    setShowActions((prev) => ({
+      ...prev,
+      [rowId]: !prev[rowId], // Toggle the visibility of actions
+    }))
+  }
   return (
     <div className='space-y-4'>
       <DataTableToolbar table={table} />
@@ -175,19 +185,25 @@ export function DataTable<TData extends ClientData, TValue>({
                   })}
                   <TableCell>
                     <div className='flex space-x-2'>
-                      {editableRow === row.original ? (
+                      {/* Button to toggle actions */}
+                      <Button onClick={() => toggleActions(row.id)} className="bg-gray-200 hover:bg-gray-300 text-black">...</Button>
+                      {showActions[row.id] && (
                         <>
-                          <Button onClick={handleSave}>Save</Button>
-                          <Button onClick={handleCancel}>Cancel</Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button onClick={() => handleEdit(row.original)}>
-                            Edit
-                          </Button>
-                          <Button onClick={() => handleDelete(row.original)}>
-                            Delete
-                          </Button>
+                          {editableRow === row.original ? (
+                            <>
+                              <Button onClick={handleSave}>Save</Button>
+                              <Button onClick={handleCancel}>Cancel</Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button onClick={() => handleEdit(row.original)}>
+                                Edit
+                              </Button>
+                              <Button onClick={() => handleDelete(row.original)}>
+                                Delete
+                              </Button>
+                            </>
+                          )}
                         </>
                       )}
                     </div>

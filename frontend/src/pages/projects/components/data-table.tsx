@@ -37,7 +37,7 @@ export interface ClientData {
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
+  columns: ColumnDef<TData, TValue>[] 
   data: TData[]
   setData: React.Dispatch<React.SetStateAction<TData[]>>
 }
@@ -53,6 +53,7 @@ export function DataTable<TData extends ClientData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [editableRow, setEditableRow] = useState<TData | null>(null)
   const [tempData, setTempData] = useState<TData | null>(null)
+  const [showActions, setShowActions] = useState<{ [key: string]: boolean }>({}) // State to show/hide actions
 
   const table = useReactTable({
     data,
@@ -81,16 +82,18 @@ export function DataTable<TData extends ClientData, TValue>({
 
   const handleSave = async () => {
     if (tempData) {
-      // console.log('-->', tempData)
       setData((prevData) =>
         prevData.map((item) => (item === editableRow ? tempData : item))
       )
+      setEditableRow(null)
+      collapseActions() // Collapse after saving
     }
   }
 
   const handleCancel = () => {
     setEditableRow(null)
     setTempData(null)
+    collapseActions() // Collapse after cancelling
   }
 
   const handleChange = (key: keyof TData, value: any) => {
@@ -103,8 +106,21 @@ export function DataTable<TData extends ClientData, TValue>({
     if (window.confirm('Are you sure you want to delete this item?')) {
       await axiosInstance.delete(`/project/delete/${row.projectId}`)
       setData((prevData) => prevData.filter((item) => item !== row))
+      collapseActions() // Collapse after deleting
       console.log('Deleted:', row)
     }
+  }
+
+  // Function to collapse all actions after any operation
+  const collapseActions = () => {
+    setShowActions({})
+  }
+
+  const toggleActions = (rowId: string) => {
+    setShowActions((prev) => ({
+      ...prev,
+      [rowId]: !prev[rowId], // Toggle the visibility of actions
+    }))
   }
 
   return (
@@ -166,19 +182,25 @@ export function DataTable<TData extends ClientData, TValue>({
                   })}
                   <TableCell>
                     <div className='flex space-x-2'>
-                      {editableRow === row.original ? (
+                      {/* Button to toggle actions */}
+                      <Button onClick={() => toggleActions(row.id)} className="bg-gray-200 hover:bg-gray-300 text-black">...</Button>
+                      {showActions[row.id] && (
                         <>
-                          <Button onClick={handleSave}>Save</Button>
-                          <Button onClick={handleCancel}>Cancel</Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button onClick={() => handleEdit(row.original)}>
-                            Edit
-                          </Button>
-                          <Button onClick={() => handleDelete(row.original)}>
-                            Delete
-                          </Button>
+                          {editableRow === row.original ? (
+                            <>
+                              <Button onClick={handleSave}>Save</Button>
+                              <Button onClick={handleCancel}>Cancel</Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button onClick={() => handleEdit(row.original)}>
+                                Edit
+                              </Button>
+                              <Button onClick={() => handleDelete(row.original)}>
+                                Delete
+                              </Button>
+                            </>
+                          )}
                         </>
                       )}
                     </div>
