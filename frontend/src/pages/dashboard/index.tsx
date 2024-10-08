@@ -8,7 +8,7 @@ import { RecentSales } from './components/emp-highlight';
 import { Overview } from './components/overview';
 import axiosInstance from '@/lib/axios';
 import { ClientData } from '../projects/components/data-table';
-import { FaUsers, FaClipboardList, FaProjectDiagram, FaUserFriends } from 'react-icons/fa'; // Import icons
+import { FaUsers, FaClipboardList, FaProjectDiagram, FaUserFriends } from 'react-icons/fa';
 
 export default function Dashboard() {
   const [totalProjects, setTotalProjects] = useState(0);
@@ -136,6 +136,7 @@ export default function Dashboard() {
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
                   <CardTitle>Employee Highlights</CardTitle>
+                  <p style={{ fontSize: '0.9em', color: '#666' }}>Top 5 employees with the longest bench periods</p>
                 </CardHeader>
                 <CardContent>
                   <RecentSales />
