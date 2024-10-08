@@ -8,6 +8,7 @@ import { RecentSales } from './components/emp-highlight';
 import { Overview } from './components/overview';
 import axiosInstance from '@/lib/axios';
 import { ClientData } from '../projects/components/data-table';
+import { FaUsers, FaClipboardList, FaProjectDiagram, FaUserFriends } from 'react-icons/fa';
 
 export default function Dashboard() {
   const [totalProjects, setTotalProjects] = useState(0);
@@ -84,7 +85,9 @@ export default function Dashboard() {
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Card>
                 <CardHeader>
-                  <CardTitle className='text-sm font-medium'>Total Projects</CardTitle>
+                  <CardTitle className='text-sm font-medium flex items-center'>
+                    <FaProjectDiagram className='mr-2 text-lg' /> Total Projects
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>{totalProjects}</div>
@@ -92,7 +95,9 @@ export default function Dashboard() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle className='text-sm font-medium'>Total Bench Candidates</CardTitle>
+                  <CardTitle className='text-sm font-medium flex items-center'>
+                    <FaUserFriends className='mr-2 text-lg' /> Total Bench Candidates
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>{totalBenchCandidates}</div>
@@ -100,7 +105,9 @@ export default function Dashboard() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle className='text-sm font-medium'>Total Clients</CardTitle>
+                  <CardTitle className='text-sm font-medium flex items-center'>
+                    <FaUsers className='mr-2 text-lg' /> Total Clients
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>{totalClients}</div>
@@ -108,7 +115,9 @@ export default function Dashboard() {
               </Card>
               <Card>
                 <CardHeader>
-                  <CardTitle className='text-sm font-medium'>Total Openings</CardTitle>
+                  <CardTitle className='text-sm font-medium flex items-center'>
+                    <FaClipboardList className='mr-2 text-lg' /> Total Openings
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className='text-2xl font-bold'>{totalOpenings}</div>
@@ -127,6 +136,7 @@ export default function Dashboard() {
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
                   <CardTitle>Employee Highlights</CardTitle>
+                  <p style={{ fontSize: '0.9em', color: '#666' }}>Top 5 employees with the longest bench periods</p>
                 </CardHeader>
                 <CardContent>
                   <RecentSales />
