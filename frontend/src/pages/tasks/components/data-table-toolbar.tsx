@@ -11,6 +11,7 @@ const statusOptions = [
   { value: 'onboarding_in_progress', label: 'Onboarding in Progress' },
   { value: 'resigned', label: 'Resigned' },
   { value: 'onboarded', label: 'Onboarded' },
+  { value: 'onleave', label: 'On Leave' },
 ]
 
 interface DataTableToolbarProps<TData> {

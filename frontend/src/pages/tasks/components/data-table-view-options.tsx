@@ -118,6 +118,7 @@ export function DataTableViewOptions<TData>({
     }
   }
 
+
   const handleChangeStatus = async (status) => {
     try {
       const selectedRows = table
@@ -207,7 +208,7 @@ export function DataTableViewOptions<TData>({
       <Dialog>
         <DialogTrigger asChild>
           <Button
-          disabled={!isAnyRowSelected}
+            disabled={!isAnyRowSelected}
             // onClick={handleChangeStatusClick}
             variant='outline'
             size='sm'
@@ -228,18 +229,26 @@ export function DataTableViewOptions<TData>({
               <Label htmlFor='link' className='sr-only'>
                 Openings
               </Label>
+
               <Select onValueChange={(value) => setSelectedOpening(value)}>
                 <SelectTrigger className='w-[380px]'>
                   <SelectValue placeholder='Select Opening' />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent
+                  className='max-h-[200px] overflow-y-auto' // Enable scrolling when needed
+                  style={{
+                    scrollbarWidth: 'thin', // For Firefox
+                  }}
+                >
                   <SelectGroup>
                     <SelectLabel>Openings</SelectLabel>
-                    {data?.map((option) => (
-                      <SelectItem value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
+                    {data
+                      ?.sort((a, b) => a.label.localeCompare(b.label)) // Sort options by 'label' in ascending order
+                      .map((option) => (
+                        <SelectItem value={option.value} key={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -295,6 +304,15 @@ export function DataTableViewOptions<TData>({
                 onClick={() => handleChangeStatus('ONBOARDED')}
               >
                 OnBoarded
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button
+                type='button'
+                variant='secondary'
+                onClick={() => handleChangeStatus('ON_LEAVE')}
+              >
+                On Leave
               </Button>
             </DialogClose>
           </DialogFooter>

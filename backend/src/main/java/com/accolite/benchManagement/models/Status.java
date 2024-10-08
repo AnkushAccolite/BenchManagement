@@ -6,5 +6,6 @@ public enum Status {
     ONBOARDING_IN_PROGRESS,
     ONBOARDED,
     RESIGNED,
+    ON_LEAVE,
     ON_MATERNITY;
 }
