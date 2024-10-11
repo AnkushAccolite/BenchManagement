@@ -32,6 +32,9 @@ public class Project {
 
     private String location;
 
+    private Date startdate;
+    private Date enddate;
+
     private static String getShortForm(String name) {
         String[] words = name.split("\\s+");
         if (words.length > 1) {
@@ -53,13 +56,15 @@ public class Project {
         return clientShort + "-" + projectShort + "-" + datePart + "-" + randomDigits;
     }
 
-    public Project(@NonNull String projectName, @NonNull String clientName, String projectHead, String deptName, String deptHead, String location) {
+    public Project(@NonNull String projectName, @NonNull String clientName, String projectHead, String deptName, String deptHead, String location,Date startdate, Date enddate) {
         this.projectName = projectName;
         this.clientName = clientName;
         this.projectHead = projectHead;
         this.deptName = deptName;
         this.deptHead = deptHead;
         this.location = location;
+        this.startdate=startdate;
+        this.enddate=enddate;
         this.projectId = generateProjectId(this.clientName,this.projectName);
     }
 }

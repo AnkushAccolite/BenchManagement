@@ -35,6 +35,8 @@ interface ClientData {
   skills: string;
   location: string;
   projectName: string;
+  experience: number;  
+  deadline: Date;  
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
