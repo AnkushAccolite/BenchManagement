@@ -25,21 +25,21 @@ export const sidelinks: SideLink[] = [
     icon: <IconLayoutDashboard size={18} />,
   },
   {
-    title: 'Bench Records',
+    title: 'Projects',
     label: '',
-    href: '/tasks',
-    icon: <IconBook size={18} />,
+    href: '/projects',
+    icon: <IconNotebook size={18} />,
   },
   {
-    title: 'Openings',
+    title: 'Job Openings',
     label: '',
     href: '/openings',
     icon: <IconBriefcase size={18} />,
   },
   {
-    title: 'Projects',
+    title: 'Bench Records',
     label: '',
-    href: '/projects',
-    icon: <IconNotebook size={18} />,
+    href: '/tasks',
+    icon: <IconBook size={18} />,
   },
 ]
