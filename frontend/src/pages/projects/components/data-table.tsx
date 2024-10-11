@@ -111,7 +111,6 @@ export function DataTable<TData extends ClientData, TValue>({
     }
   }
 
-  // Function to collapse all actions after any operation
   const collapseActions = () => {
     setShowActions({})
   }
@@ -119,7 +118,7 @@ export function DataTable<TData extends ClientData, TValue>({
   const toggleActions = (rowId: string) => {
     setShowActions((prev) => ({
       ...prev,
-      [rowId]: !prev[rowId], // Toggle the visibility of actions
+      [rowId]: !prev[rowId],
     }))
   }
 

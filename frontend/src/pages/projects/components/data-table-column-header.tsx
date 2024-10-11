@@ -33,7 +33,9 @@ export function DataTableColumnHeader<TData, TValue>({
     'Client Name',
     'Location',
     'Opening ID',
-    'Openings'
+    'Openings',
+    'Start Date',
+    'End Date',
   ];
   // Check if the column can be sorted based on its title
   const canSortColumn = sortableColumns.includes(title);
@@ -62,11 +64,11 @@ export function DataTableColumnHeader<TData, TValue>({
         <DropdownMenuContent align='start'>
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUpIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Ascending
+            Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Descending
+            Desc
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>

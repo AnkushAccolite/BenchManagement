@@ -59,7 +59,7 @@ export const columns: ColumnDef<Openings>[] = [
   {
     accessorKey: 'experience',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Experience (Years)' />
+      <DataTableColumnHeader column={column} title='Experience' />
     ),
     cell: ({ row }) => <span>{row.getValue('experience')} years</span>, // Display experience in years
   },
