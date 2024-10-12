@@ -189,7 +189,7 @@ public class BenchedEmployeeController {
         BenchedEmployee benchedEmployee = benchedEmployeeRepository.findById(benchedEmployeeId)
                 .orElseThrow(() -> new Exception("Benched Employee not found"));
 
-        benchedEmployeeRepository.delete(benchedEmployee);
+        benchedEmployeeRepository.delete(benchedEmployeeId);
         return ResponseEntity.ok().body("Benched employee deleted successfully");
     }
 }

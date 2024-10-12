@@ -63,7 +63,7 @@ public class ProjectRequirementController {
         ProjectRequirement requirement = projectRequirementRepository.findById(id)
                 .orElseThrow(() -> new Exception("Project Requirement not found"));
 
-        projectRequirementRepository.delete(requirement);
+        projectRequirementRepository.delete(id);
         return ResponseEntity.ok().body("Project Requirement deleted successfully");
     }
 

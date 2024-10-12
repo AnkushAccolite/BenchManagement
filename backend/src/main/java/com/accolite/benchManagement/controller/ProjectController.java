@@ -122,7 +122,7 @@ public class ProjectController {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new Exception("Project not found"));
 
-        projectRepository.delete(project);
+        projectRepository.delete(projectId);
         return ResponseEntity.ok().body("Project deleted successfully");
 //        return ResponseEntity.ok().body(project);
     }

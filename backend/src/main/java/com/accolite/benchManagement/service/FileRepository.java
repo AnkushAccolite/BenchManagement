@@ -57,9 +57,17 @@ public class FileRepository<T> {
         writeToFile(entities);
     }
 
-    public void delete(T entity) {
+    public void delete(String id) {
         List<T> entities = findAll();
-        entities.remove(entity);
+        // Filter out the entity with the given ID
+        entities.removeIf(entity -> {
+            try {
+                return entity.getClass().getMethod("getId").invoke(entity).equals(id);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        });
         writeToFile(entities);
     }
 
