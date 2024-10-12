@@ -35,7 +35,7 @@ export default function AddProject() {
     const getData = async () => {
       const { data } = await axiosInstance.get('/project')
       const projects = data.map((project) => ({
-        id: project.projectId,
+        id: project.id,
         name: project.projectName,
         clientName: project.clientName,
       }))
@@ -66,18 +66,13 @@ export default function AddProject() {
   }
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-
     try {
       e.preventDefault()
       let payload = formData
       payload.skills = selectedSkills.join(', ')
       delete payload.projectName
-      // setFormData((prev) => (prev.skills = selectedSkills.join(', ')))
-      // setFormData((prev) => {
-      //   delete prev.projectName
-      //   return prev
-      // })
-      // console.log('--->', formData)
+
+      // console.log('=-=-=', payload, projectNames)
       await axiosInstance.post('/project-requirement', payload)
       alert('Opening added successfully!')
     } catch (error) {

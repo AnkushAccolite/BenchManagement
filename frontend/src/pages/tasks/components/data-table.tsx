@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,7 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from '@tanstack/react-table'
 
 import {
   Table,
@@ -19,13 +19,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/table'
 
-import { DataTablePagination } from '../components/data-table-pagination';
-import { DataTableToolbar } from '../components/data-table-toolbar';
-import { Button } from '@/components/custom/button';
-import { Task } from '../data/schema';
-import axios from 'axios';
+import { DataTablePagination } from '../components/data-table-pagination'
+import { DataTableToolbar } from '../components/data-table-toolbar'
+import { Button } from '@/components/custom/button'
+import { Task } from '../data/schema'
+import axios from 'axios'
 
 const statusOptions = [
   { value: 'under_evaluation', label: 'Under Evaluation' },
@@ -33,21 +33,26 @@ const statusOptions = [
   { value: 'onboarding_in_progress', label: 'Onboarding in Progress' },
   { value: 'resigned', label: 'Resigned' },
   { value: 'onboarded', label: 'Onboarded' },
-];
+]
 
 interface DataTableProps {
-  columns: ColumnDef<Task>[];
-  data: Task[];
-  setData: React.Dispatch<React.SetStateAction<Task[]>>;
+  columns: ColumnDef<Task>[]
+  data: Task[]
+  setData: React.Dispatch<React.SetStateAction<Task[]>>
 }
 
 export function DataTable({ columns, data, setData }: DataTableProps) {
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [editableRow, setEditableRow] = React.useState<Task | null>(null);
-  const [tempData, setTempData] = React.useState<Task | null>(null);
-  const [showActions, setShowActions] = React.useState<{ [key: string]: boolean }>({});
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [editableRow, setEditableRow] = React.useState<Task | null>(null)
+  const [tempData, setTempData] = React.useState<Task | null>(null)
+  const [showActions, setShowActions] = React.useState<{
+    [key: string]: boolean
+  }>({})
 
   const table = useReactTable({
     data,
@@ -64,59 +69,57 @@ export function DataTable({ columns, data, setData }: DataTableProps) {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  });
+  })
 
   const handleEdit = (row: Task) => {
-    setEditableRow(row);
-    setTempData(row);
-    setShowActions((prev) => ({ ...prev, [row.empId]: true })); // Show actions on edit
-  };
+    setEditableRow(row)
+    setTempData(row)
+    setShowActions((prev) => ({ ...prev, [row.empId]: true })) // Show actions on edit
+  }
 
   const handleSave = () => {
     if (tempData && editableRow) {
-      const updatedData = { ...tempData };
-      delete updatedData.skills; // Remove skills from the object before sending it to the backend
-      window.confirm('Are you sure you want to update the data?');
+      const updatedData = { ...tempData }
+      // delete updatedData.skills // Remove skills from the object before sending it to the backend
+      window.confirm('Are you sure you want to update the data?')
       setData((prevData) =>
         prevData.map((item) =>
           item.empId === editableRow.empId ? tempData : item
         )
-      );
+      )
+      // console.log('===', updatedData)
       axios
-        .put(
-          `http://localhost:8080/benched-employee/update/${tempData.empId}`,
-          updatedData
-        )
+        .put(`http://localhost:8080/benched-employee/update`, updatedData)
         .then(() => {
           /* Optionally handle success */
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error))
 
       // Collapse action buttons after save
-      collapseActions() 
-      setEditableRow(null);
-      setTempData(null);
+      collapseActions()
+      setEditableRow(null)
+      setTempData(null)
     }
-  };
+  }
 
   const handleCancel = () => {
     if (editableRow) {
       // Collapse action buttons after cancel
-      collapseActions() 
+      collapseActions()
     }
-    setEditableRow(null);
-    setTempData(null);
-  };
+    setEditableRow(null)
+    setTempData(null)
+  }
 
   const handleChange = (key: keyof Task, value: any) => {
     if (tempData) {
-      setTempData({ ...tempData, [key]: value });
+      setTempData({ ...tempData, [key]: value })
     }
-  };
+  }
 
   const handleDelete = (row: Task) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
-      const updatedRow = { ...row, isDeleted: !row.isDeleted };
+      const updatedRow = { ...row, isDeleted: !row.isDeleted }
 
       axios
         .put(
@@ -126,27 +129,27 @@ export function DataTable({ columns, data, setData }: DataTableProps) {
         .then(() => {
           setData((prevData) =>
             prevData.filter((item) => item.empId !== row.empId)
-          );
+          )
           // Collapse action buttons after delete
-          collapseActions() 
+          collapseActions()
         })
         .catch((error) => {
-          console.error('Error deleting employee:', error);
-        });
+          console.error('Error deleting employee:', error)
+        })
     }
-  };
-    // Function to collapse all actions after any operation
-    const collapseActions = () => {
-      setShowActions({})
-    }
+  }
+  // Function to collapse all actions after any operation
+  const collapseActions = () => {
+    setShowActions({})
+  }
 
   const toggleActions = (rowId: string) => {
     setShowActions((prev) => ({
       ...prev,
       [rowId]: !prev[rowId],
-    }));
-  };
-  
+    }))
+  }
+
   return (
     <div className='space-y-4'>
       <DataTableToolbar table={table} />
@@ -216,7 +219,7 @@ export function DataTable({ columns, data, setData }: DataTableProps) {
                     <div className='flex space-x-2'>
                       <Button
                         onClick={() => toggleActions(row.id)}
-                        className="bg-gray-200 hover:bg-gray-300 text-black"
+                        className='bg-gray-200 text-black hover:bg-gray-300'
                       >
                         ...
                       </Button>
@@ -232,7 +235,9 @@ export function DataTable({ columns, data, setData }: DataTableProps) {
                               <Button onClick={() => handleEdit(row.original)}>
                                 Edit
                               </Button>
-                              <Button onClick={() => handleDelete(row.original)}>
+                              <Button
+                                onClick={() => handleDelete(row.original)}
+                              >
                                 Delete
                               </Button>
                             </>
@@ -258,5 +263,5 @@ export function DataTable({ columns, data, setData }: DataTableProps) {
       </div>
       <DataTablePagination table={table} />
     </div>
-  );
+  )
 }

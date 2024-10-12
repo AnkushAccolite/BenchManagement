@@ -34,6 +34,7 @@ export default function AddProject() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
+    // console.log('-=-=', formData)
 
     await axiosInstance.post('/project', formData)
     alert('Project added successfully!')

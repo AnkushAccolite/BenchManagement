@@ -16,9 +16,7 @@ export default function Openings() {
       )
       const { data: projResponse } = await axiosInstance.get('/project')
       const mergedData = reqResponse.map((req) => {
-        const project = projResponse.find(
-          (proj) => proj.projectId === req.projectId
-        )
+        const project = projResponse.find((proj) => proj.id === req.projectId)
         return {
           id: req.id,
           projectId: req.projectId,
