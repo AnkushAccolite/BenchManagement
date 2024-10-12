@@ -50,7 +50,6 @@ export function DataTable<TData extends ClientData, TValue>({
   columns,
   data,
   setData,
-  fetch,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

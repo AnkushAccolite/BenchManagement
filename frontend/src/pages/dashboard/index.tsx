@@ -6,6 +6,7 @@ import ThemeSwitch from '@/components/theme-switch';
 import { UserNav } from '@/components/user-nav';
 import { RecentSales } from './components/emp-highlight';
 import { Overview } from './components/overview';
+import ProjectDetails from '../dashboard/project-details';
 import axiosInstance from '@/lib/axios';
 import { ClientData } from '../projects/components/data-table';
 import { FaUsers, FaClipboardList, FaProjectDiagram, FaUserFriends } from 'react-icons/fa';
@@ -79,6 +80,7 @@ export default function Dashboard() {
           <div className='w-full overflow-x-auto pb-2'>
             <TabsList>
               <TabsTrigger value='overview'>Overview</TabsTrigger>
+              <TabsTrigger value='project-details'>Project Details</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value='overview' className='space-y-4'>
@@ -143,6 +145,9 @@ export default function Dashboard() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+          <TabsContent value='project-details' className='space-y-4'>
+            <ProjectDetails />
           </TabsContent>
         </Tabs>
       </Layout.Body>
