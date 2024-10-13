@@ -24,6 +24,8 @@ export default function Openings() {
           openings: req.openings,
           clientName: req.clientName,
           skills: req.skills,
+          experience: req.experience,
+          deadline:req.deadline,
           location: project ? project.location : 'Unknown Location',
         }
       })

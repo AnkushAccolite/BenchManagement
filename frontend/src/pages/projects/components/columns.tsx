@@ -1,5 +1,4 @@
 import { ColumnDef } from '@tanstack/react-table'
-
 import { DataTableColumnHeader } from './data-table-column-header'
 import { Projects } from '../data/schema'
 
@@ -58,5 +57,26 @@ export const columns: ColumnDef<Projects>[] = [
       <DataTableColumnHeader column={column} title='Location' />
     ),
     cell: ({ row }) => <span>{row.getValue('location')}</span>,
+  },
+  {
+    accessorKey: 'startdate',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Start Date' />
+    ),
+    cell: ({ row }) => (
+      <span>{new Date(row.getValue('startdate')).toLocaleDateString()}</span>
+    ),
+    enableSorting: true,  // Enable sorting if needed
+  },
+  
+  {
+    accessorKey: 'enddate',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='End Date' />
+    ),
+    cell: ({ row }) => (
+      <span>{new Date(row.getValue('enddate')).toLocaleDateString()}</span>
+    ),
+    enableSorting: true,  // Enable sorting if needed
   },
 ]

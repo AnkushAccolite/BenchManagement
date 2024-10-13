@@ -28,13 +28,15 @@ import { DataTableColumnHeader } from '../components/data-table-column-header'
 import axiosInstance from '@/lib/axios'
 
 interface ClientData {
-  clientName: string
-  id: string
-  openings: number
-  projectId: string
-  skills: string
-  location: string
-  projectName: string
+  clientName: string;
+  id: string;
+  openings: number;
+  projectId: string;
+  skills: string;
+  location: string;
+  projectName: string;
+  experience: number;  
+  deadline: Date;  
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
@@ -48,7 +50,6 @@ export function DataTable<TData extends ClientData, TValue>({
   columns,
   data,
   setData,
-  fetch,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})

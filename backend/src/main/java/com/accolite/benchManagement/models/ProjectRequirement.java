@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -25,16 +26,23 @@ public class ProjectRequirement {
 
     private Integer openings;
 
-//    private List<String> interviewScheduled = new ArrayList<>();
-//    private List<String> selectedEmployees = new ArrayList<>();
+
+    private Integer experience;  // New field for experience
+
+    private Date deadline;  // New field for deadline
+
+    private List<String> interviewScheduled = new ArrayList<>();
+    private List<String> selectedEmployees = new ArrayList<>();
 
 
 
-    public ProjectRequirement(String projectId, String skills,String clientName, Integer openings) {
+    public ProjectRequirement(String projectId, String skills,String clientName, Integer openings,Integer experience,Date deadline) {
         this.projectId = projectId;
         this.skills = skills;
         this.clientName = clientName;
         this.openings = openings;
+        this.experience = experience;  // Initialize experience
+        this.deadline = deadline;
         this.id = generateId(projectId);
     }
 

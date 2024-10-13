@@ -36,6 +36,9 @@ public class Project {
     private String startDate;
     private String endDate;
 
+    private Date startdate;
+    private Date enddate;
+
     private static String getShortForm(String name) {
         String[] words = name.split("\\s+");
         if (words.length > 1) {
@@ -58,6 +61,7 @@ public class Project {
     }
 
     public Project(@NonNull String projectName, @NonNull String clientName, String projectHead, String deptName, String deptHead, String location,String endDate) {
+
         this.projectName = projectName;
         this.clientName = clientName;
         this.projectHead = projectHead;
@@ -67,4 +71,5 @@ public class Project {
         this.startDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
         this.endDate = endDate;
         this.id = generateProjectId(clientName,projectName);    }
+
 }

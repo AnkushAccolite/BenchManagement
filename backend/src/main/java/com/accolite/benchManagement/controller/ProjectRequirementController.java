@@ -54,8 +54,10 @@ public class ProjectRequirementController {
         ProjectRequirement existingRequirement = projectRequirementRepository.findById(requirementDetails.getId())
                 .orElseThrow(() -> new Exception("Project Requirement not found"));
 
+
         projectRequirementRepository.update(requirementDetails);
         return ResponseEntity.ok().body("Project requirement updated successfully");
+
     }
 
     @DeleteMapping("/delete/{id}")
