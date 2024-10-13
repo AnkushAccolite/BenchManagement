@@ -65,7 +65,7 @@ package com.accolite.benchManagement.controller;
 
 
 import com.accolite.benchManagement.models.Project;
-import com.accolite.benchManagement.models.ProjectAddDTO;
+import com.accolite.benchManagement.models.DTO.ProjectAddDTO;
 import com.accolite.benchManagement.service.FileRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.http.ResponseEntity;

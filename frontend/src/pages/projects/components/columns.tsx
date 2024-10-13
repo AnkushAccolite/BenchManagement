@@ -59,24 +59,20 @@ export const columns: ColumnDef<Projects>[] = [
     cell: ({ row }) => <span>{row.getValue('location')}</span>,
   },
   {
-    accessorKey: 'startdate',
+    accessorKey: 'startDate',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Start Date' />
     ),
-    cell: ({ row }) => (
-      <span>{new Date(row.getValue('startdate')).toLocaleDateString()}</span>
-    ),
-    enableSorting: true,  // Enable sorting if needed
+    cell: ({ row }) => <span>{row.getValue('startDate')}</span>,
+    enableSorting: true, // Enable sorting if needed
   },
-  
+
   {
-    accessorKey: 'enddate',
+    accessorKey: 'endDate',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='End Date' />
     ),
-    cell: ({ row }) => (
-      <span>{new Date(row.getValue('enddate')).toLocaleDateString()}</span>
-    ),
-    enableSorting: true,  // Enable sorting if needed
+    cell: ({ row }) => <span>{row.getValue('endDate')}</span>,
+    enableSorting: true, // Enable sorting if needed
   },
 ]

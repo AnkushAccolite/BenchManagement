@@ -1,4 +1,4 @@
-package com.accolite.benchManagement.models;
+package com.accolite.benchManagement.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.accolite.benchManagement.models;
+package com.accolite.benchManagement.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,4 +18,6 @@ public class ProjectRequirementAddDTO {
     private String skills;
 
     private Integer openings;
+    private Integer experience;
+    private String deadline;
 }

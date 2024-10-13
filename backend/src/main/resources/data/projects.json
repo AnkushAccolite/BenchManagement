@@ -1,1 +1,24 @@
-[{"id":"GS-BM-1024-5995","projectName":"Bench Management","clientName":"Goldman Sachs","projectHead":"Ankush","deptName":"BFS","deptHead":"Ankush","location":"Bangalore, India","startDate":"12-10-2024","endDate":null},{"id":"MS-TM-1024-6527","projectName":"Training Management","clientName":"Morgan Stanley","projectHead":"Chirag","deptName":"BFS","deptHead":"Chirag","location":"Bangalore, India","startDate":"12-10-2024","endDate":null}]
+[
+  {
+    "id": "GS-BM-1024-5995",
+    "projectName": "Bench Management",
+    "clientName": "Goldman Sachs",
+    "projectHead": "Ankush",
+    "deptName": "BFS",
+    "deptHead": "Ankush",
+    "location": "Bangalore, India",
+    "startDate": "12-10-2024",
+    "endDate": "12-10-2025"
+  },
+  {
+    "id": "MS-TM-1024-6527",
+    "projectName": "Training Management",
+    "clientName": "Morgan Stanley",
+    "projectHead": "Chirag",
+    "deptName": "BFS",
+    "deptHead": "Chirag",
+    "location": "Bangalore, India",
+    "startDate": "12-10-2024",
+    "endDate": "12-10-2025"
+  }
+]

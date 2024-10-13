@@ -1,17 +1,13 @@
 package com.accolite.benchManagement.controller;
 
 import com.accolite.benchManagement.models.*;
-import com.accolite.benchManagement.repository.BenchedEmployeeRepository;
-import com.accolite.benchManagement.repository.ProjectRequirementRepository;
+import com.accolite.benchManagement.models.DTO.ProjectRequirementAddDTO;
 import com.accolite.benchManagement.service.FileRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/project-requirement")
@@ -24,14 +20,15 @@ public class ProjectRequirementController {
     String path = "src/main/resources/data/";
 
     public ProjectRequirementController() {
-        this.projectRequirementRepository = new FileRepository<>(path+"projectRequirement.json", new TypeReference<List<ProjectRequirement>>() {});
+        this.projectRequirementRepository = new FileRepository<>(path + "projectRequirement.json", new TypeReference<List<ProjectRequirement>>() {
+        });
 //        this.benchedEmployeeRepository = new FileRepository<>(path+"benched_employees.json", new TypeReference<List<BenchedEmployee>>() {});
     }
 
 
     @PostMapping
     public ResponseEntity<?> createProjectRequirement(@RequestBody ProjectRequirementAddDTO projectRequirement) {
-        ProjectRequirement newProjectRequirement = new ProjectRequirement(projectRequirement.getProjectId(),projectRequirement.getSkills(),projectRequirement.getClientName(),projectRequirement.getOpenings());
+        ProjectRequirement newProjectRequirement = new ProjectRequirement(projectRequirement.getProjectId(), projectRequirement.getSkills(), projectRequirement.getClientName(), projectRequirement.getOpenings(), projectRequirement.getExperience(), projectRequirement.getDeadline());
         projectRequirementRepository.save(newProjectRequirement);
         return ResponseEntity.ok().body("Project requirement created successfully");
     }

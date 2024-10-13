@@ -1,3 +1,4 @@
+import axiosInstance from '@/lib/axios'
 import React, { useEffect, useState } from 'react'
 
 // Define the interfaces for BenchRecord and Opening
@@ -8,7 +9,7 @@ interface BenchRecord {
   skills: string
   isInterviewScheduled?: boolean // Track if the interview is scheduled
   scheduledFor?: string // Track which project the interview is scheduled for
-  status?: 'approved' | 'rejected'
+  status?: 'approved' | 'rejected' | 'scheduled'
 }
 
 interface Opening {
@@ -34,85 +35,96 @@ const Rafts = () => {
   const [openingFilter, setOpeningFilter] = useState('')
 
   useEffect(() => {
-    // Dummy data for bench records
-    const dummyBenchRecords: BenchRecord[] = [
-      {
-        empId: 'E001',
-        empName: 'John Doe',
-        experience: 5,
-        skills: 'Java, Spring Boot',
-      },
-      {
-        empId: 'E002',
-        empName: 'Jane Smith',
-        experience: 1,
-        skills: 'React, Node.js',
-      },
-      {
-        empId: 'E003',
-        empName: 'Aroshi',
-        experience: 2,
-        skills: 'React, Node.js',
-      },
-      {
-        empId: 'E004',
-        empName: 'Rishika',
-        experience: 4,
-        skills: 'Java, Spring Boot',
-      },
-      // Add more records...
-    ]
-
-    // Dummy data for openings
-    const dummyOpenings: Opening[] = [
-      {
-        id: 'O001',
-        projectName: 'Project Alpha',
-        openings: 3,
-        clientName: 'Client A',
-        skills: 'Java, Spring Boot,React',
-        location: 'New York',
-        experience: 4,
-        scheduledCandidates: [],
-      },
-      {
-        id: 'O002',
-        projectName: 'Project Beta',
-        openings: 2,
-        clientName: 'Client B',
-        skills: 'React, Node.js',
-        location: 'San Francisco',
-        experience: 2,
-        scheduledCandidates: [],
-      },
-      {
-        id: 'O003',
-        projectName: 'Project Gamma',
-        openings: 1,
-        clientName: 'Client C',
-        skills: 'Java, Spring Boot,React',
-        location: 'New York',
-        experience: 4,
-        scheduledCandidates: [],
-      },
-      // Add more openings...
-    ]
-
-    // Setting the dummy data
-    setBenchRecords(dummyBenchRecords)
-    setOpenings(dummyOpenings)
+    fetchData()
   }, [])
 
+  const fetchData = async () => {
+    try {
+      // Fetch benched employees and project openings data
+      const { data: benchedRecordsRes } =
+        await axiosInstance.get('/benched-employee')
+      const { data: openingsRes } = await axiosInstance.get(
+        '/project-requirement'
+      )
+
+      // Fetch scheduled interviews
+      const { data: scheduledInterviews } = await axiosInstance.get(
+        '/scheduledInterviews'
+      )
+      const { data: projectsRes } = await axiosInstance.get('/project')
+
+      // Transform the API response data into the required BenchRecord format
+      const transformedBenchRecords: BenchRecord[] = benchedRecordsRes.map(
+        (record: any) => {
+          const interview = scheduledInterviews.find(
+            (interview: any) => interview.empId === record.empId
+          )
+
+          return {
+            empId: record.empId,
+            empName: record.name,
+            experience: record.experience,
+            skills: record.skills,
+            isInterviewScheduled: !!interview, // True if there's a scheduled interview
+            scheduledFor: interview ? interview.projectName : undefined, // Project name if interview scheduled
+            status: interview ? interview.status : undefined, // Interview status if scheduled
+          }
+        }
+      )
+      // console.log('sch', scheduledInterviews)
+
+      // Transform the API response data into the required Opening format
+      const transformedOpenings: Opening[] = openingsRes.map((opening: any) => {
+        const scheduledCandidates = scheduledInterviews
+          .filter((interview: any) => interview.openingId === opening.id)
+          .map((interview: any) => {
+            return {
+              empId: interview.empId,
+              empName: interview.empName,
+              experience: interview.experience,
+              skills: interview.skills,
+              isInterviewScheduled: true, // Since it's in scheduled candidates, it's true
+              scheduledFor: opening.projectName,
+              status: interview.status,
+            }
+          })
+        // console.log('schh', scheduledCandidates)
+
+        return {
+          id: opening.id,
+          projectName: projectsRes.find(
+            (project) => project.id === opening.projectId
+          ).projectName, // Assuming projectId is the project name
+          // projectName: opening.projectId, // Assuming projectId is the project name
+          clientName: opening.clientName,
+          skills: opening.skills,
+          location: 'Not Provided', // Default value for location
+          openings: opening.openings,
+          experience: opening.experience,
+          scheduledCandidates, // List of candidates scheduled for this project
+        }
+      })
+      // Set the transformed data to state
+      setBenchRecords(transformedBenchRecords)
+      setOpenings(transformedOpenings)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
   // Function to handle drag-and-drop
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, opening: Opening) => {
     e.preventDefault()
     const empId = e.dataTransfer.getData('text/plain')
     const record = benchRecords.find((record) => record.empId === empId)
 
+    console.log('===>', record, opening)
+
     if (record) {
       // Check if there are openings available
       if (opening.openings <= 0) {
-        setModalMessage(`No openings available for project ${opening.projectName}.`)
+        setModalMessage(
+          `No openings available for project ${opening.projectName}.`
+        )
         setModalOpen(true)
         return
       }
@@ -150,30 +162,32 @@ const Rafts = () => {
     }
   }
 
-  // Function to confirm interview scheduling
   const confirmScheduleInterview = () => {
     if (currentRecord && currentOpening) {
-      // Remove the record from benchRecords
-      setBenchRecords((prevRecords) =>
-        prevRecords.filter((record) => record.empId !== currentRecord.empId)
-      )
+      const scheduledInterview = {
+        empId: currentRecord.empId,
+        empName: currentRecord.empName,
+        openingId: currentOpening.id,
+        projectName: currentOpening.projectName,
+        skills: currentRecord.skills,
+        experience: currentRecord.experience,
+        status: 'scheduled',
+      }
 
-      // Add the record to the scheduledCandidates of the corresponding opening
-      setOpenings((prevOpenings) =>
-        prevOpenings.map((opening) =>
-          opening.id === currentOpening.id
-            ? {
-                ...opening,
-                scheduledCandidates: [
-                  ...opening.scheduledCandidates,
-                  { ...currentRecord, scheduledFor: currentOpening.id },
-                ],
-              }
-            : opening
-        )
-      )
+      // console.log('sch', currentOpening)
 
-      setModalOpen(false) // Close the modal
+      axiosInstance
+        .post('/scheduledInterviews', scheduledInterview)
+        .then((response) => {
+          fetchData()
+
+          setModalOpen(false) // Close the modal
+        })
+        .catch((error) => {
+          console.error('Error scheduling interview:', error)
+          setModalMessage('Error scheduling interview. Please try again.')
+          setModalOpen(true)
+        })
     }
   }
 
@@ -215,61 +229,34 @@ const Rafts = () => {
     )
   })
 
-  const handleApprove = (openingId: string, empId: string) => {
-    setOpenings((prevOpenings) =>
-      prevOpenings.map((opening) => {
-        if (opening.id === openingId) {
-          const updatedCandidates = opening.scheduledCandidates.map(
-            (candidate) =>
-              candidate.empId === empId
-                ? { ...candidate, status: 'approved' }
-                : candidate
-          )
-          return {
-            ...opening,
-            openings: opening.openings - 1, // Reduce openings by 1 when approved
-            scheduledCandidates: updatedCandidates,
-          }
-        }
-        return opening
-      })
+  const handleApprove = async (openingId: string, empId: string) => {
+    await axiosInstance.put(
+      `scheduledInterviews/${empId}/status/${openingId}/approved`
     )
+    fetchData()
   }
 
-  const handleReject = (openingId: string, empId: string) => {
-    setOpenings((prevOpenings) =>
-      prevOpenings.map((opening) => {
-        if (opening.id === openingId) {
-          const updatedCandidates = opening.scheduledCandidates.map(
-            (candidate) =>
-              candidate.empId === empId
-                ? { ...candidate, status: 'rejected' }
-                : candidate
-          )
-          return {
-            ...opening,
-            scheduledCandidates: updatedCandidates,
-          }
-        }
-        return opening
-      })
+  const handleReject = async (openingId: string, empId: string) => {
+    await axiosInstance.put(
+      `scheduledInterviews/${empId}/status/${openingId}/rejected`
     )
+    fetchData()
   }
 
   return (
     <div className='flex h-screen'>
       {/* Left Side - Bench Records */}
-      <div className='w-1/3 flex flex-col rounded-lg border bg-white p-4 shadow-md'>
-        <h2 className='mb-4 text-xl font-bold text-center'>Bench Records</h2>
+      <div className='flex w-1/3 flex-col rounded-lg border bg-white p-4 shadow-md'>
+        <h2 className='mb-4 text-center text-xl font-bold'>Bench Records</h2>
         <input
           type='text'
           placeholder='Filter Bench Records...'
-          className='mb-8 rounded border p-2 h-8'
+          className='mb-8 h-8 rounded border p-2'
           value={benchFilter}
           onChange={(e) => setBenchFilter(e.target.value)}
         />
         {/* Fixed Headers */}
-        <div className='mb-4 grid grid-cols-4  font-bold text-xs ml-2'>
+        <div className='mb-4 ml-2 grid  grid-cols-4 text-xs font-bold'>
           <div>Emp ID</div>
           <div>Emp Name</div>
           <div>Experience</div>
@@ -282,7 +269,7 @@ const Rafts = () => {
           {filteredBenchRecords.map((record) => (
             <div
               key={record.empId}
-              className={`mb-2 grid grid-cols-4 rounded-lg border p-2 shadow-sm text-xs ${record.isInterviewScheduled ? 'bg-green-200' : 'bg-gray-100'}`}
+              className={`mb-2 grid grid-cols-4 rounded-lg border p-2 text-xs shadow-sm ${record.isInterviewScheduled ? 'bg-green-200' : 'bg-gray-100'}`}
               draggable
               onDragStart={(e) =>
                 e.dataTransfer.setData('text/plain', record.empId)
@@ -299,16 +286,16 @@ const Rafts = () => {
 
       {/* Right Side - Openings */}
       <div className='flex w-2/3 flex-col rounded-lg border bg-white p-4 shadow-md'>
-        <h2 className='mb-4 text-xl font-bold text-center'>Openings</h2>
+        <h2 className='mb-4 text-center text-xl font-bold'>Openings</h2>
         <input
           type='text'
           placeholder='Filter Openings...'
-          className='mb-8 rounded border p-2 h-8'
+          className='mb-8 h-8 rounded border p-2'
           value={openingFilter}
           onChange={(e) => setOpeningFilter(e.target.value)}
         />
         {/* Fixed Headers */}
-        <div className='mb-4 grid grid-cols-7 font-bold text-xs'>
+        <div className='mb-4 grid grid-cols-7 text-xs font-bold'>
           <div>Opening ID</div>
           <div>Project Name</div>
           <div>Client Name</div>
@@ -323,7 +310,7 @@ const Rafts = () => {
         >
           {filteredOpenings.map((opening) => (
             <div
-              className='mb-2 grid grid-cols-7 rounded-lg border p-2 shadow-sm text-xs'
+              className='mb-2 grid grid-cols-7 rounded-lg border p-2 text-xs shadow-sm'
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, opening)}
               key={opening.id}
@@ -365,17 +352,21 @@ const Rafts = () => {
                               <span className='text-red-600'>Rejected</span>
                             )}
                           </div>
-                          {!candidate.status && (
+                          {candidate.status === 'scheduled' && (
                             <div className='flex space-x-2'>
                               <button
                                 className='rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600'
-                                onClick={() => handleApprove(opening.id, candidate.empId)}
+                                onClick={() =>
+                                  handleApprove(opening.id, candidate.empId)
+                                }
                               >
                                 Approve
                               </button>
                               <button
                                 className='rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600'
-                                onClick={() => handleReject(opening.id, candidate.empId)}
+                                onClick={() =>
+                                  handleReject(opening.id, candidate.empId)
+                                }
                               >
                                 Reject
                               </button>

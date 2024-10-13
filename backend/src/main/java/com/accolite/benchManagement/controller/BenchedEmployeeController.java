@@ -142,7 +142,7 @@ package com.accolite.benchManagement.controller;//package com.accolite.benchMana
 //
 //
 import com.accolite.benchManagement.models.BenchedEmployee;
-import com.accolite.benchManagement.models.BenchedEmployeeDTO;
+import com.accolite.benchManagement.models.DTO.BenchedEmployeeDTO;
 import com.accolite.benchManagement.service.FileRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.http.ResponseEntity;
