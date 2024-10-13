@@ -25,18 +25,6 @@ export const sidelinks: SideLink[] = [
     icon: <IconLayoutDashboard size={18} />,
   },
   {
-    title: 'Bench Records',
-    label: '',
-    href: '/tasks',
-    icon: <IconBook size={18} />,
-  },
-  {
-    title: 'Openings',
-    label: '',
-    href: '/openings',
-    icon: <IconBriefcase size={18} />,
-  },
-  {
     title: 'Projects',
     label: '',
     href: '/projects',
@@ -47,5 +35,17 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/raft',
     icon: <IconBriefcase size={18} />,
+  },
+  {
+   title: 'Job Openings',
+    label: '',
+    href: '/openings',
+    icon: <IconBriefcase size={18} />,
+  },
+  {
+    title: 'Bench Records',
+    label: '',
+    href: '/tasks',
+    icon: <IconBook size={18} />,
   },
 ]

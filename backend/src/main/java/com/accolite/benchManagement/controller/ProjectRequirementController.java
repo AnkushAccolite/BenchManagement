@@ -48,6 +48,8 @@ public class ProjectRequirementController {
         existingRequirement.setSkills(requirementDetails.getSkills());
         existingRequirement.setOpenings(requirementDetails.getOpenings());
         existingRequirement.setClientName(requirementDetails.getClientName());
+        existingRequirement.setExperience(requirementDetails.getExperience());  // Update experience
+        existingRequirement.setDeadline(requirementDetails.getDeadline());
 
         ProjectRequirement updatedRequirement = projectRequirementRepository.save(existingRequirement);
         return ResponseEntity.ok(updatedRequirement);

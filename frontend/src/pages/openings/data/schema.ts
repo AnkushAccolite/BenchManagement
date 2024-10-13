@@ -8,8 +8,9 @@ export const taskSchema = z.object({
   clientName: z.string(),
   requirements: z.string(),
   skills: z.string(),
-  deadline: z.string(),
+  deadline: z.date(),
   location: z.string(),
+  experience: z.string(),
 })
 
 export type Openings = z.infer<typeof taskSchema>;

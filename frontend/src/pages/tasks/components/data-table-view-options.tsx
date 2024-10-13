@@ -224,7 +224,7 @@ export function DataTableViewOptions<TData>({
               Selected Employees status will change accordingly
             </DialogDescription>
           </DialogHeader>
-          <div className='flex items-center space-x-2'>
+          {/* <div className='flex items-center space-x-2'>
             <div className='grid flex-1 gap-2'>
               <Label htmlFor='link' className='sr-only'>
                 Openings
@@ -258,7 +258,7 @@ export function DataTableViewOptions<TData>({
                 Submit
               </Button>
             </DialogClose>
-          </div>
+          </div> */}
           <DialogFooter className='max-w-[480px] flex-wrap items-center space-y-2 sm:justify-start'>
             <DialogClose asChild>
               <Button
@@ -288,7 +288,7 @@ export function DataTableViewOptions<TData>({
               </Button>
             </DialogClose>
             <br />
-            <DialogClose asChild>
+            {/* <DialogClose asChild>
               <Button
                 type='button'
                 variant='secondary'
@@ -296,7 +296,7 @@ export function DataTableViewOptions<TData>({
               >
                 OnBoarding In Progress
               </Button>
-            </DialogClose>
+            </DialogClose> */}
             <DialogClose asChild>
               <Button
                 type='button'

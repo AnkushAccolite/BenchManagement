@@ -64,7 +64,7 @@ export default function Sidebar({
                 xmlns='http://www.w3.org/2000/svg'
                 version='1.1'
                 xmlnsXlink='http://www.w3.org/1999/xlink'
-                xmlnsSvgjs='http://svgjs.com/svgjs'
+                // xmlnsSvgjs='http://svgjs.com/svgjs'
                 width={isCollapsed ? '24' : '28'}
                 height={isCollapsed ? '24' : '32'}
                 viewBox='0 0 64 64'

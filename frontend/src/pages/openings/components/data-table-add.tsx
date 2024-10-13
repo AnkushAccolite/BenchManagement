@@ -24,6 +24,8 @@ export default function AddProject() {
     projectId: '',
     skills: '',
     openings: '',
+    experience: '',  // New field
+    deadline: '',    // New field
   }
 
   const [formData, setFormData] = useState(initialFormState)
@@ -66,18 +68,11 @@ export default function AddProject() {
   }
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
-
     try {
       e.preventDefault()
       let payload = formData
       payload.skills = selectedSkills.join(', ')
       delete payload.projectName
-      // setFormData((prev) => (prev.skills = selectedSkills.join(', ')))
-      // setFormData((prev) => {
-      //   delete prev.projectName
-      //   return prev
-      // })
-      // console.log('--->', formData)
       await axiosInstance.post('/project-requirement', payload)
       alert('Opening added successfully!')
     } catch (error) {
@@ -110,11 +105,9 @@ export default function AddProject() {
           <form onSubmit={handleSubmit}>
             <table className='min-w-full table-fixed border-collapse border border-gray-300 dark:border-gray-600'>
               <tbody>
+                {/* Client Name */}
                 <tr>
-                  <td
-                    className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'
-                    style={{ width: '200px' }}
-                  >
+                  <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
                     Client Name
                   </td>
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
@@ -135,11 +128,10 @@ export default function AddProject() {
                     </select>
                   </td>
                 </tr>
+
+                {/* Project Name */}
                 <tr>
-                  <td
-                    className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'
-                    style={{ width: '200px' }}
-                  >
+                  <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
                     Project Name
                   </td>
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
@@ -165,12 +157,9 @@ export default function AddProject() {
                   </td>
                 </tr>
 
-                {/* Multiple Skills Selection */}
+                {/* Skills */}
                 <tr>
-                  <td
-                    className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'
-                    style={{ width: '200px' }}
-                  >
+                  <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
                     Skills
                   </td>
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
@@ -188,18 +177,14 @@ export default function AddProject() {
                         </option>
                       ))}
                     </select>
-
-                    {/* Show selected skills with an option to remove */}
                     <div className='mt-2'>
                       <div className='mt-1 flex flex-wrap gap-2'>
-                        {selectedSkills.length > 0 ? (
+                        {selectedSkills.length > 0 &&
                           selectedSkills.map((skill) => (
                             <div
                               key={skill}
                               className='mb-1 flex items-center rounded bg-gray-200 px-2 py-1 text-black dark:bg-gray-700 dark:text-white'
                             >
-                              {' '}
-                              {/* Add mb-1 for vertical spacing */}
                               <span>{skill}</span>
                               <button
                                 type='button'
@@ -209,21 +194,15 @@ export default function AddProject() {
                                 &times;
                               </button>
                             </div>
-                          ))
-                        ) : (
-                          <span></span>
-                        )}
+                          ))}
                       </div>
                     </div>
                   </td>
                 </tr>
 
-                {/* Openings Textbox */}
+                {/* Openings */}
                 <tr>
-                  <td
-                    className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'
-                    style={{ width: '200px' }}
-                  >
+                  <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
                     Openings
                   </td>
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
@@ -238,14 +217,48 @@ export default function AddProject() {
                     />
                   </td>
                 </tr>
+
+                {/* Experience */}
+                <tr>
+                  <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
+                    Experience
+                  </td>
+                  <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
+                    <input
+                      type='number'
+                      id='experience'
+                      name='experience'
+                      value={formData.experience}
+                      onChange={handleChange}
+                      className='w-full rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring dark:border-gray-600 dark:bg-gray-900 dark:text-white'
+                      placeholder='Enter required experience in years'
+                    />
+                  </td>
+                </tr>
+
+                {/* Deadline */}
+                <tr>
+                  <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
+                    Deadline
+                  </td>
+                  <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
+                    <input
+                      type='date'
+                      id='deadline'
+                      name='deadline'
+                      value={formData.deadline}
+                      onChange={handleChange}
+                      className='w-full rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring dark:border-gray-600 dark:bg-gray-900 dark:text-white'
+                    />
+                  </td>
+                </tr>
               </tbody>
             </table>
 
-            {/* Submit Button */}
-            <div className='mt-4 flex justify-center'>
+            <div className='mt-6 text-center'>
               <button
                 type='submit'
-                className='rounded-md bg-black px-4 py-2 text-white hover:bg-black focus:outline-none focus:ring focus:ring-black dark:bg-gray-600 dark:hover:bg-gray-500 dark:focus:ring-gray-500'
+                className='rounded-md bg-blue-500 px-4 py-2 text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
               >
                 Submit
               </button>

@@ -56,4 +56,22 @@ export const columns: ColumnDef<Openings>[] = [
     ),
     cell: ({ row }) => <span>{row.getValue('location')}</span>,
   },
+  {
+    accessorKey: 'experience',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Experience (Years)' />
+    ),
+    cell: ({ row }) => <span>{row.getValue('experience')} years</span>, // Display experience in years
+  },
+  
+  {
+    accessorKey: 'deadline',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Deadline' />
+    ),
+    cell: ({ row }) => {
+      const deadlineDate = new Date(row.getValue('deadline'))
+      return <span>{deadlineDate.toLocaleDateString()}</span> // Format the date
+    },
+  },
 ]

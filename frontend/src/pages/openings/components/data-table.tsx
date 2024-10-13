@@ -35,6 +35,8 @@ interface ClientData {
   skills: string;
   location: string;
   projectName: string;
+  experience: number;  
+  deadline: Date;  
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
@@ -48,7 +50,6 @@ export function DataTable<TData extends ClientData, TValue>({
   columns,
   data,
   setData,
-  fetch,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({});
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
