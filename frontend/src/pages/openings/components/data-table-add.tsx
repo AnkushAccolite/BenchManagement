@@ -37,7 +37,7 @@ export default function AddProject() {
     const getData = async () => {
       const { data } = await axiosInstance.get('/project')
       const projects = data.map((project) => ({
-        id: project.projectId,
+        id: project.id,
         name: project.projectName,
         clientName: project.clientName,
       }))

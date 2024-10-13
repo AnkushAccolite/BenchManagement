@@ -4,13 +4,11 @@ import { Projects } from '../data/schema'
 
 export const columns: ColumnDef<Projects>[] = [
   {
-    accessorKey: 'projectId',
+    accessorKey: 'id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Project ID' />
     ),
-    cell: ({ row }) => (
-      <div className='w-[80px]'>{row.getValue('projectId')}</div>
-    ),
+    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
     enableSorting: true,
     enableHiding: false,
   },

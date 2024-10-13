@@ -1,8 +1,7 @@
 package com.accolite.benchManagement.models;
 
 
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,11 +12,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Document(collection = "Projects")
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class Project {
 
     @Id
-    private String projectId;
+    private String id;
 
     @NonNull
     private String projectName;
@@ -31,6 +33,8 @@ public class Project {
     private String deptHead;
 
     private String location;
+    private String startDate;
+    private String endDate;
 
     private Date startdate;
     private Date enddate;
@@ -56,15 +60,16 @@ public class Project {
         return clientShort + "-" + projectShort + "-" + datePart + "-" + randomDigits;
     }
 
-    public Project(@NonNull String projectName, @NonNull String clientName, String projectHead, String deptName, String deptHead, String location,Date startdate, Date enddate) {
+    public Project(@NonNull String projectName, @NonNull String clientName, String projectHead, String deptName, String deptHead, String location,String endDate) {
+
         this.projectName = projectName;
         this.clientName = clientName;
         this.projectHead = projectHead;
         this.deptName = deptName;
         this.deptHead = deptHead;
         this.location = location;
-        this.startdate=startdate;
-        this.enddate=enddate;
-        this.projectId = generateProjectId(this.clientName,this.projectName);
-    }
+        this.startDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        this.endDate = endDate;
+        this.id = generateProjectId(clientName,projectName);    }
+
 }
