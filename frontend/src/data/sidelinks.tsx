@@ -42,4 +42,10 @@ export const sidelinks: SideLink[] = [
     href: '/projects',
     icon: <IconNotebook size={18} />,
   },
+  {
+    title: 'Scheduler',
+    label: '',
+    href: '/raft',
+    icon: <IconBriefcase size={18} />,
+  },
 ]
