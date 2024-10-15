@@ -13,26 +13,26 @@ interface BenchRecord {
 }
 
 interface Opening {
-  id: string
-  projectName: string
-  openings: number
-  clientName: string
-  skills: string
-  location: string
-  experience: number // Added experience field for openings
-  scheduledCandidates: BenchRecord[] // Store the scheduled candidates
+  id: string;
+  projectName: string;
+  openings: number;
+  clientName: string;
+  skills: string;
+  location: string;
+  experience: number; // Added experience field for openings
+  scheduledCandidates: BenchRecord[]; // Store the scheduled candidates
 }
 
 const Rafts = () => {
-  const [benchRecords, setBenchRecords] = useState<BenchRecord[]>([])
-  const [openings, setOpenings] = useState<Opening[]>([])
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modalMessage, setModalMessage] = useState('')
-  const [currentRecord, setCurrentRecord] = useState<BenchRecord | null>(null)
-  const [currentOpening, setCurrentOpening] = useState<Opening | null>(null)
-  const [openAccordions, setOpenAccordions] = useState<string[]>([]) // Track which accordions are open
-  const [benchFilter, setBenchFilter] = useState('')
-  const [openingFilter, setOpeningFilter] = useState('')
+  const [benchRecords, setBenchRecords] = useState<BenchRecord[]>([]);
+  const [openings, setOpenings] = useState<Opening[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [currentRecord, setCurrentRecord] = useState<BenchRecord | null>(null);
+  const [currentOpening, setCurrentOpening] = useState<Opening | null>(null);
+  const [openAccordions, setOpenAccordions] = useState<string[]>([]); // Track which accordions are open
+  const [benchFilter, setBenchFilter] = useState('');
+  const [openingFilter, setOpeningFilter] = useState('');
 
   useEffect(() => {
     fetchData()
@@ -113,54 +113,57 @@ const Rafts = () => {
   }
   // Function to handle drag-and-drop
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, opening: Opening) => {
-    e.preventDefault()
-    const empId = e.dataTransfer.getData('text/plain')
-    const record = benchRecords.find((record) => record.empId === empId)
-
-    console.log('===>', record, opening)
-
+    e.preventDefault();
+    const empId = e.dataTransfer.getData('text/plain');
+    const record = benchRecords.find((record) => record.empId === empId);
+  
     if (record) {
       // Check if there are openings available
       if (opening.openings <= 0) {
         setModalMessage(
           `No openings available for project ${opening.projectName}.`
-        )
-        setModalOpen(true)
-        return
+        );
+        setModalOpen(true);
+        return;
       }
-
+  
+      // Check if the candidate already has a scheduled interview for the same project
+      const alreadyScheduledForSameProject = record.scheduledFor === opening.projectName;
+  
+      if (alreadyScheduledForSameProject) {
+        setModalMessage(
+          `Interview has already been scheduled for ${record.empName} for ${opening.projectName}, regardless of the status.`
+        );
+        setModalOpen(true);
+        return;
+      }
+  
       const skillsMatched = opening.skills
         .split(',')
-        .filter((skill) => record.skills.includes(skill.trim())).length // Count matched skills
-      const experienceMatched = record.experience >= opening.experience // Check if experience is equal or more than required
-
-      const alreadyScheduled = record.scheduledFor === opening.id // Check if already scheduled for this opening
-
-      if (alreadyScheduled) {
-        setModalMessage(
-          `Interview has already been scheduled for ${record.empName} for ${opening.projectName}.`
-        )
-        setModalOpen(true)
-      } else if (skillsMatched >= 2 && experienceMatched) {
-        setCurrentRecord(record)
-        setCurrentOpening(opening) // Store the current opening
+        .filter((skill) => record.skills.includes(skill.trim())).length; // Count matched skills
+      const experienceMatched = record.experience >= opening.experience; // Check if experience is equal or more than required
+  
+      if (skillsMatched >= 2 && experienceMatched) {
+        setCurrentRecord(record);
+        setCurrentOpening(opening); // Store the current opening
         setModalMessage(
           `Do you want to schedule an interview for ${record.empName} for project ${opening.projectName}?`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       } else if (skillsMatched < 2) {
         setModalMessage(
           `Can't schedule interview for ${record.empName} due to insufficient skills match.`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       } else {
         setModalMessage(
           `Experience level does not match for ${record.empName}. Required: ${opening.experience} years, Provided: ${record.experience} years.`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       }
     }
-  }
+  };
+  
 
   const confirmScheduleInterview = async () => {
     if (currentRecord && currentOpening) {
@@ -200,12 +203,12 @@ const Rafts = () => {
         setModalOpen(false)
       }
     }
-  }
+  };
 
   // Function to cancel scheduling and close the modal
   const cancelScheduleInterview = () => {
-    setModalOpen(false) // Close the modal
-  }
+    setModalOpen(false); // Close the modal
+  };
 
   // Toggle the accordion for the specific opening
   const toggleAccordion = (openingId: string) => {
@@ -213,23 +216,23 @@ const Rafts = () => {
       prevAccordions.includes(openingId)
         ? prevAccordions.filter((id) => id !== openingId)
         : [...prevAccordions, openingId]
-    )
-  }
+    );
+  };
 
   // Function to handle bench records filtering
   const filteredBenchRecords = benchRecords.filter((record) => {
-    const lowerCaseFilter = benchFilter.toLowerCase()
+    const lowerCaseFilter = benchFilter.toLowerCase();
     return (
       record.empId.toLowerCase().includes(lowerCaseFilter) ||
       record.empName.toLowerCase().includes(lowerCaseFilter) ||
       record.skills.toLowerCase().includes(lowerCaseFilter) ||
       record.experience.toString().includes(lowerCaseFilter)
-    )
-  })
+    );
+  });
 
   // Function to handle openings filtering
   const filteredOpenings = openings.filter((opening) => {
-    const lowerCaseFilter = openingFilter.toLowerCase()
+    const lowerCaseFilter = openingFilter.toLowerCase();
     return (
       opening.id.toLowerCase().includes(lowerCaseFilter) ||
       opening.projectName.toLowerCase().includes(lowerCaseFilter) ||
@@ -237,15 +240,22 @@ const Rafts = () => {
       opening.skills.toLowerCase().includes(lowerCaseFilter) ||
       opening.location.toLowerCase().includes(lowerCaseFilter) ||
       opening.experience.toString().includes(lowerCaseFilter)
-    )
-  })
+    );
+  });
 
   const handleApprove = async (openingId: string, empId: string) => {
-    await axiosInstance.put(
-      `scheduledInterviews/${empId}/status/${openingId}/approved`
-    )
-    fetchData()
-  }
+  await axiosInstance.put(
+    `scheduledInterviews/${empId}/status/${openingId}/approved`
+  );
+  // Fetch the updated data
+  fetchData(); // This will update the records again
+
+  // Remove the approved candidate from the bench records
+  setBenchRecords((prevRecords) =>
+    prevRecords.filter((record) => record.empId !== empId)
+  );
+}
+
 
   const handleReject = async (openingId: string, empId: string) => {
     await axiosInstance.put(
@@ -271,7 +281,7 @@ const Rafts = () => {
           <div>Emp ID</div>
           <div>Emp Name</div>
           <div>Experience</div>
-          <div className='ml-2'>Skills</div>
+          <div>Skills</div>
         </div>
         <div
           className='flex-1 overflow-y-auto'
@@ -288,7 +298,7 @@ const Rafts = () => {
             >
               <div>{record.empId}</div>
               <div>{record.empName}</div>
-              <div className='ml-3'>{record.experience} years</div>
+              <div>{record.experience} years</div>
               <div>{record.skills}</div>
             </div>
           ))}
@@ -310,7 +320,7 @@ const Rafts = () => {
           <div>Opening ID</div>
           <div>Project Name</div>
           <div>Client Name</div>
-          <div className='ml-2'>Skills</div>
+          <div>Skills</div>
           <div>Location</div>
           <div>Experience</div>
           <div>Openings</div>
@@ -328,16 +338,16 @@ const Rafts = () => {
             >
               <div>{opening.id}</div>
               <div>{opening.projectName}</div>
-              <div className='ml-3'>{opening.clientName}</div>
+              <div>{opening.clientName}</div>
               <div>{opening.skills}</div>
               <div>{opening.location}</div>
-              <div className='ml-5'>{opening.experience} years</div>
-              <div className='ml-8'>{opening.openings}</div>
+              <div>{opening.experience} years</div>
+              <div>{opening.openings}</div>
               {/* Accordion for Scheduled Candidates */}
               {opening.scheduledCandidates.length > 0 && (
-                <div className='col-span-6 mt-2'>
+                <div className='col-span-7 mt-2'>
                   <button
-                    className='w-full rounded bg-gray-100 p-2 text-left shadow-sm'
+                    className='w-full rounded bg-gray-200 p-2 text-left shadow-sm'
                     onClick={() => toggleAccordion(opening.id)}
                   >
                     {openAccordions.includes(opening.id)
@@ -346,13 +356,13 @@ const Rafts = () => {
                   </button>
 
                   {openAccordions.includes(opening.id) && (
-                    <div className='mt-2 rounded-lg bg-gray-50 p-4'>
+                    <div className='mt-2 rounded-lg bg-gray-100 p-4'>
                       {opening.scheduledCandidates.map((candidate) => (
                         <div
-                          className={`mb-2 flex items-center justify-between ${candidate.status === 'approved' || candidate.status === 'rejected' ? 'bg-gray-300' : ''}`}
+                          className={`mb-2 flex items-center justify-between rounded-lg p-2 ${candidate.status === 'approved' ? 'bg-green-100' : candidate.status === 'rejected' ? 'bg-red-100' : 'bg-gray-50'}`}
                           key={candidate.empId}
                         >
-                          <strong>
+                          <strong className='text-gray-800'>
                             {candidate.empId} - {candidate.empName}
                           </strong>
                           <div>
@@ -428,7 +438,7 @@ const Rafts = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Rafts
+export default Rafts;
