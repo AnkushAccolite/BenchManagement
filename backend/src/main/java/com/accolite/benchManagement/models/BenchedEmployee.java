@@ -10,19 +10,20 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 @Document(collection = "BenchedEmployees")
 @Data
 @NoArgsConstructor // Added for deserialization
 @AllArgsConstructor // All-arguments constructor for quick object initialization
-public class BenchedEmployee {
+public class BenchedEmployee implements Serializable {
 
     @Id
-    @Indexed(unique = true)
     private String id;
 
     private String name;
@@ -43,16 +44,17 @@ public class BenchedEmployee {
 
     private Integer experience;
 
-    @DBRef
-    private List<Skill> skills;
+    private Integer ageing;
 
-    private Boolean isDeleted = false;  // Default to false
+    private String skills;
+
+    private Boolean isDeleted = false;
 
     // Date formatter for parsing the date string
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
-        public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation,String benchedOn,Integer experience) {
+        public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation,String benchedOn,Integer experience,String skills ) {
         this.name = name;
         this.empId = empId;
         this.doj = doj;
@@ -60,7 +62,9 @@ public class BenchedEmployee {
         this.benchedOn = benchedOn;
         this.experience=experience;
         this.isDeleted=false;
-        this.client="UnAssigned";
+        this.client="Not Assigned";
+        this.skills=skills;
+        this.id = UUID.randomUUID().toString();
     }
     // Method to calculate ageing dynamically
     // Method to calculate ageing dynamically

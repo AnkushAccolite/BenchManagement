@@ -1,16 +1,16 @@
 package com.accolite.benchManagement.models;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Document(collection = "project_requirements")
-public class ProjectRequirement {
+public class ProjectRequirement{
 
     @Id
     private String id;
@@ -23,21 +23,22 @@ public class ProjectRequirement {
 
     private Integer openings;
 
+
     private Integer experience;  // New field for experience
 
-    private Date deadline;  // New field for deadline
+    private String deadline;  // New field for deadline
 
-    private List<String> interviewScheduled = new ArrayList<>();
-    private List<String> selectedEmployees = new ArrayList<>();
+//    private List<String> interviewScheduled = new ArrayList<>();
+//    private List<String> selectedEmployees = new ArrayList<>();
 
 
 
-    public ProjectRequirement(String projectId, String skills,String clientName, Integer openings,Integer experience,Date deadline) {
+    public ProjectRequirement(String projectId, String skills,String clientName, Integer openings,Integer experience,String deadline) {
         this.projectId = projectId;
         this.skills = skills;
         this.clientName = clientName;
         this.openings = openings;
-        this.experience = experience;  // Initialize experience
+        this.experience = experience;
         this.deadline = deadline;
         this.id = generateId(projectId);
     }

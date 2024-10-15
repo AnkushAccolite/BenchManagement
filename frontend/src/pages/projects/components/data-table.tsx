@@ -37,7 +37,7 @@ export interface ClientData {
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
-  columns: ColumnDef<TData, TValue>[] 
+  columns: ColumnDef<TData, TValue>[]
   data: TData[]
   setData: React.Dispatch<React.SetStateAction<TData[]>>
 }
@@ -85,6 +85,8 @@ export function DataTable<TData extends ClientData, TValue>({
       setData((prevData) =>
         prevData.map((item) => (item === editableRow ? tempData : item))
       )
+
+      await axiosInstance.put('/project/update', tempData)
       setEditableRow(null)
       collapseActions() // Collapse after saving
     }
@@ -183,7 +185,12 @@ export function DataTable<TData extends ClientData, TValue>({
                   <TableCell>
                     <div className='flex space-x-2'>
                       {/* Button to toggle actions */}
-                      <Button onClick={() => toggleActions(row.id)} className="bg-gray-200 hover:bg-gray-300 text-black">...</Button>
+                      <Button
+                        onClick={() => toggleActions(row.id)}
+                        className='bg-gray-200 text-black hover:bg-gray-300'
+                      >
+                        ...
+                      </Button>
                       {showActions[row.id] && (
                         <>
                           {editableRow === row.original ? (
@@ -196,7 +203,9 @@ export function DataTable<TData extends ClientData, TValue>({
                               <Button onClick={() => handleEdit(row.original)}>
                                 Edit
                               </Button>
-                              <Button onClick={() => handleDelete(row.original)}>
+                              <Button
+                                onClick={() => handleDelete(row.original)}
+                              >
                                 Delete
                               </Button>
                             </>

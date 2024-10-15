@@ -15,10 +15,8 @@ export default function Openings() {
         '/project-requirement'
       )
       const { data: projResponse } = await axiosInstance.get('/project')
-      const mergedData = reqResponse.map((req: { projectId: any; id: any; openings: any; clientName: any; skills: any; experience: any; deadline: any }) => {
-        const project = projResponse.find(
-          (proj: { projectId: any }) => proj.projectId === req.projectId
-        )
+      const mergedData = reqResponse.map((req) => {
+        const project = projResponse.find((proj) => proj.id === req.projectId)
         return {
           id: req.id,
           projectId: req.projectId,
@@ -27,11 +25,11 @@ export default function Openings() {
           clientName: req.clientName,
           skills: req.skills,
           experience: req.experience,
-          deadline:req.deadline,
+          deadline: req.deadline,
           location: project ? project.location : 'Unknown Location',
         }
       })
-      console.log('-->', mergedData)
+      console.log('-->++', mergedData)
       setData(mergedData)
     } catch (error) {
       console.log(error)

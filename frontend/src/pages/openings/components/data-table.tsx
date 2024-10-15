@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,7 +10,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from '@tanstack/react-table';
+} from '@tanstack/react-table'
 
 import {
   Table,
@@ -19,13 +19,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/table'
 
-import { DataTablePagination } from '../components/data-table-pagination';
-import { DataTableToolbar } from '../components/data-table-toolbar';
-import { Button } from '@/components/custom/button';
-import { DataTableColumnHeader } from '../components/data-table-column-header';
-import axiosInstance from '@/lib/axios';
+import { DataTablePagination } from '../components/data-table-pagination'
+import { DataTableToolbar } from '../components/data-table-toolbar'
+import { Button } from '@/components/custom/button'
+import { DataTableColumnHeader } from '../components/data-table-column-header'
+import axiosInstance from '@/lib/axios'
 
 interface ClientData {
   clientName: string;
@@ -40,10 +40,10 @@ interface ClientData {
 }
 
 interface DataTableProps<TData extends ClientData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  setData: React.Dispatch<React.SetStateAction<TData[]>>;
-  fetch: () => void;
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  setData: React.Dispatch<React.SetStateAction<TData[]>>
+  fetch: () => void
 }
 
 export function DataTable<TData extends ClientData, TValue>({
@@ -51,13 +51,13 @@ export function DataTable<TData extends ClientData, TValue>({
   data,
   setData,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [editableRow, setEditableRow] = useState<TData | null>(null);
-  const [tempData, setTempData] = useState<TData | null>(null);
-  const [showActions, setShowActions] = useState<{ [key: string]: boolean }>({}); // State to show/hide actions
+  const [rowSelection, setRowSelection] = useState({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [editableRow, setEditableRow] = useState<TData | null>(null)
+  const [tempData, setTempData] = useState<TData | null>(null)
+  const [showActions, setShowActions] = useState<{ [key: string]: boolean }>({}) // State to show/hide actions
 
   const table = useReactTable({
     data,
@@ -77,7 +77,7 @@ export function DataTable<TData extends ClientData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-  });
+  })
 
   const handleEdit = (row: TData) => {
     setEditableRow(row)
@@ -89,6 +89,7 @@ export function DataTable<TData extends ClientData, TValue>({
       setData((prevData) =>
         prevData.map((item) => (item === editableRow ? tempData : item))
       )
+      await axiosInstance.put('/project-requirement/update', tempData)
       setEditableRow(null)
       collapseActions() // Collapse after saving
     }
@@ -116,8 +117,8 @@ export function DataTable<TData extends ClientData, TValue>({
   }
 
   // Function to collapse all actions after any operation
-   // Function to collapse all actions after any operation
-   const collapseActions = () => {
+  // Function to collapse all actions after any operation
+  const collapseActions = () => {
     setShowActions({})
   }
 
@@ -187,7 +188,12 @@ export function DataTable<TData extends ClientData, TValue>({
                   <TableCell>
                     <div className='flex space-x-2'>
                       {/* Button to toggle actions */}
-                      <Button onClick={() => toggleActions(row.id)} className="bg-gray-200 hover:bg-gray-300 text-black">...</Button>
+                      <Button
+                        onClick={() => toggleActions(row.id)}
+                        className='bg-gray-200 text-black hover:bg-gray-300'
+                      >
+                        ...
+                      </Button>
                       {showActions[row.id] && (
                         <>
                           {editableRow === row.original ? (
@@ -200,7 +206,9 @@ export function DataTable<TData extends ClientData, TValue>({
                               <Button onClick={() => handleEdit(row.original)}>
                                 Edit
                               </Button>
-                              <Button onClick={() => handleDelete(row.original)}>
+                              <Button
+                                onClick={() => handleDelete(row.original)}
+                              >
                                 Delete
                               </Button>
                             </>

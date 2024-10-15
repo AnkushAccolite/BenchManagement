@@ -1,23 +1,20 @@
-package com.accolite.benchManagement.models;
+package com.accolite.benchManagement.models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class BenchedEmployee2DTO {
+public class BenchedEmployeeDTO {
     private String name;
     private String empId;
     private String doj;
     private String baseLocation;
     private String benchedOn;
+    private String skills;
     private Integer experience;
-    private Boolean isDeleted;
-    private String status;
 }
