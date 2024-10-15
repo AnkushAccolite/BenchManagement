@@ -74,6 +74,13 @@ const router = createBrowserRouter([
         }),
       },
       {
+        path: 'project-dashboard',
+        lazy: async () => ({
+          Component: (await import('@/pages/dashboard/project-details.tsx'))
+            .default,
+        }),
+      },
+      {
         path: '/add-item',
         lazy: async () => ({
           Component: (
@@ -98,8 +105,7 @@ const router = createBrowserRouter([
       {
         path: 'raft',
         lazy: async () => ({
-          Component: (await import('@/pages/raft/rafts.tsx'))
-            .default,
+          Component: (await import('@/pages/raft/rafts.tsx')).default,
         }),
       },
       {

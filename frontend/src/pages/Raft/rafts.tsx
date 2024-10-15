@@ -13,26 +13,26 @@ interface BenchRecord {
 }
 
 interface Opening {
-  id: string;
-  projectName: string;
-  openings: number;
-  clientName: string;
-  skills: string;
-  location: string;
-  experience: number; // Added experience field for openings
-  scheduledCandidates: BenchRecord[]; // Store the scheduled candidates
+  id: string
+  projectName: string
+  openings: number
+  clientName: string
+  skills: string
+  location: string
+  experience: number // Added experience field for openings
+  scheduledCandidates: BenchRecord[] // Store the scheduled candidates
 }
 
 const Rafts = () => {
-  const [benchRecords, setBenchRecords] = useState<BenchRecord[]>([]);
-  const [openings, setOpenings] = useState<Opening[]>([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [currentRecord, setCurrentRecord] = useState<BenchRecord | null>(null);
-  const [currentOpening, setCurrentOpening] = useState<Opening | null>(null);
-  const [openAccordions, setOpenAccordions] = useState<string[]>([]); // Track which accordions are open
-  const [benchFilter, setBenchFilter] = useState('');
-  const [openingFilter, setOpeningFilter] = useState('');
+  const [benchRecords, setBenchRecords] = useState<BenchRecord[]>([])
+  const [openings, setOpenings] = useState<Opening[]>([])
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalMessage, setModalMessage] = useState('')
+  const [currentRecord, setCurrentRecord] = useState<BenchRecord | null>(null)
+  const [currentOpening, setCurrentOpening] = useState<Opening | null>(null)
+  const [openAccordions, setOpenAccordions] = useState<string[]>([]) // Track which accordions are open
+  const [benchFilter, setBenchFilter] = useState('')
+  const [openingFilter, setOpeningFilter] = useState('')
 
   useEffect(() => {
     fetchData()
@@ -54,8 +54,9 @@ const Rafts = () => {
       const { data: projectsRes } = await axiosInstance.get('/project')
 
       // Transform the API response data into the required BenchRecord format
-      const transformedBenchRecords: BenchRecord[] = benchedRecordsRes.map(
-        (record: any) => {
+      const transformedBenchRecords: BenchRecord[] = benchedRecordsRes
+        .filter((emp) => emp.status === 'UNDER_EVALUATION')
+        .map((record: any) => {
           const interview = scheduledInterviews.find(
             (interview: any) => interview.empId === record.empId
           )
@@ -69,8 +70,7 @@ const Rafts = () => {
             scheduledFor: interview ? interview.projectName : undefined, // Project name if interview scheduled
             status: interview ? interview.status : undefined, // Interview status if scheduled
           }
-        }
-      )
+        })
       // console.log('sch', scheduledInterviews)
 
       // Transform the API response data into the required Opening format
@@ -112,58 +112,64 @@ const Rafts = () => {
     }
   }
   // Function to handle drag-and-drop
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, opening: Opening) => {
-    e.preventDefault();
-    const empId = e.dataTransfer.getData('text/plain');
-    const record = benchRecords.find((record) => record.empId === empId);
-  
+  const handleDrop = async (
+    e: React.DragEvent<HTMLDivElement>,
+    opening: Opening
+  ) => {
+    e.preventDefault()
+    const empId = e.dataTransfer.getData('text/plain')
+    const record = benchRecords.find((record) => record.empId === empId)
+
     if (record) {
       // Check if there are openings available
       if (opening.openings <= 0) {
         setModalMessage(
           `No openings available for project ${opening.projectName}.`
-        );
-        setModalOpen(true);
-        return;
+        )
+        setModalOpen(true)
+        return
       }
-  
+
       // Check if the candidate already has a scheduled interview for the same project
-      const alreadyScheduledForSameProject = record.scheduledFor === opening.projectName;
-  
-      if (alreadyScheduledForSameProject) {
+      // const alreadyScheduledForSameProject =
+      record.scheduledFor === opening.projectName
+      const { data: status } = await axiosInstance.get(
+        `/scheduledInterviews/${empId}/status/${opening.id}`
+      )
+
+      if (status !== 'notFound') {
         setModalMessage(
-          `Interview has already been scheduled for ${record.empName} for ${opening.projectName}, regardless of the status.`
-        );
-        setModalOpen(true);
-        return;
+          `${record.empName} is already ${status} for ${opening.projectName}`
+        )
+        setModalOpen(true)
+        return
       }
-  
+
       const skillsMatched = opening.skills
         .split(',')
-        .filter((skill) => record.skills.includes(skill.trim())).length; // Count matched skills
-      const experienceMatched = record.experience >= opening.experience; // Check if experience is equal or more than required
-  
+        .filter((skill) => record.skills.includes(skill.trim())).length // Count matched skills
+      const experienceMatched = record.experience >= opening.experience // Check if experience is equal or more than required
+
       if (skillsMatched >= 2 && experienceMatched) {
-        setCurrentRecord(record);
-        setCurrentOpening(opening); // Store the current opening
+        setCurrentRecord(record)
+        setCurrentOpening(opening) // Store the current opening
         setModalMessage(
           `Do you want to schedule an interview for ${record.empName} for project ${opening.projectName}?`
-        );
-        setModalOpen(true);
+        )
+        setModalOpen(true)
       } else if (skillsMatched < 2) {
         setModalMessage(
           `Can't schedule interview for ${record.empName} due to insufficient skills match.`
-        );
-        setModalOpen(true);
+        )
+        setModalOpen(true)
       } else {
         setModalMessage(
           `Experience level does not match for ${record.empName}. Required: ${opening.experience} years, Provided: ${record.experience} years.`
-        );
-        setModalOpen(true);
+        )
+        setModalOpen(true)
       }
     }
-  };
-  
+  }
 
   const confirmScheduleInterview = async () => {
     if (currentRecord && currentOpening) {
@@ -203,12 +209,12 @@ const Rafts = () => {
         setModalOpen(false)
       }
     }
-  };
+  }
 
   // Function to cancel scheduling and close the modal
   const cancelScheduleInterview = () => {
-    setModalOpen(false); // Close the modal
-  };
+    setModalOpen(false) // Close the modal
+  }
 
   // Toggle the accordion for the specific opening
   const toggleAccordion = (openingId: string) => {
@@ -216,23 +222,23 @@ const Rafts = () => {
       prevAccordions.includes(openingId)
         ? prevAccordions.filter((id) => id !== openingId)
         : [...prevAccordions, openingId]
-    );
-  };
+    )
+  }
 
   // Function to handle bench records filtering
   const filteredBenchRecords = benchRecords.filter((record) => {
-    const lowerCaseFilter = benchFilter.toLowerCase();
+    const lowerCaseFilter = benchFilter.toLowerCase()
     return (
       record.empId.toLowerCase().includes(lowerCaseFilter) ||
       record.empName.toLowerCase().includes(lowerCaseFilter) ||
       record.skills.toLowerCase().includes(lowerCaseFilter) ||
       record.experience.toString().includes(lowerCaseFilter)
-    );
-  });
+    )
+  })
 
   // Function to handle openings filtering
   const filteredOpenings = openings.filter((opening) => {
-    const lowerCaseFilter = openingFilter.toLowerCase();
+    const lowerCaseFilter = openingFilter.toLowerCase()
     return (
       opening.id.toLowerCase().includes(lowerCaseFilter) ||
       opening.projectName.toLowerCase().includes(lowerCaseFilter) ||
@@ -240,22 +246,21 @@ const Rafts = () => {
       opening.skills.toLowerCase().includes(lowerCaseFilter) ||
       opening.location.toLowerCase().includes(lowerCaseFilter) ||
       opening.experience.toString().includes(lowerCaseFilter)
-    );
-  });
+    )
+  })
 
   const handleApprove = async (openingId: string, empId: string) => {
-  await axiosInstance.put(
-    `scheduledInterviews/${empId}/status/${openingId}/approved`
-  );
-  // Fetch the updated data
-  fetchData(); // This will update the records again
+    await axiosInstance.put(
+      `scheduledInterviews/${empId}/status/${openingId}/approved`
+    )
+    // Fetch the updated data
+    fetchData() // This will update the records again
 
-  // Remove the approved candidate from the bench records
-  setBenchRecords((prevRecords) =>
-    prevRecords.filter((record) => record.empId !== empId)
-  );
-}
-
+    // Remove the approved candidate from the bench records
+    setBenchRecords((prevRecords) =>
+      prevRecords.filter((record) => record.empId !== empId)
+    )
+  }
 
   const handleReject = async (openingId: string, empId: string) => {
     await axiosInstance.put(
@@ -438,7 +443,7 @@ const Rafts = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Rafts;
+export default Rafts

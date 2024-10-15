@@ -5,7 +5,6 @@ import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import axiosInstance from '@/lib/axios'
 
 export default function Tasks() {

@@ -19,8 +19,8 @@ import java.util.UUID;
 
 @Document(collection = "BenchedEmployees")
 @Data
-@NoArgsConstructor // Added for deserialization
-@AllArgsConstructor // All-arguments constructor for quick object initialization
+@NoArgsConstructor
+@AllArgsConstructor
 public class BenchedEmployee implements Serializable {
 
     @Id
@@ -50,7 +50,7 @@ public class BenchedEmployee implements Serializable {
 
     private Boolean isDeleted = false;
 
-    // Date formatter for parsing the date string
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
@@ -66,32 +66,24 @@ public class BenchedEmployee implements Serializable {
         this.skills=skills;
         this.id = UUID.randomUUID().toString();
     }
-    // Method to calculate ageing dynamically
-    // Method to calculate ageing dynamically
     public Integer getAgeing() {
         if (benchedOn != null && !benchedOn.isEmpty()) {
             try {
-                // Trim any extra whitespace or newlines
+
                 String trimmedBenchedOn = benchedOn.trim();
 
-                // Parse the trimmed date string
+
                 LocalDate benchedDate = LocalDate.parse(trimmedBenchedOn, FORMATTER);
                 LocalDate currentDate = LocalDate.now();
 
-                // Calculate the difference in days and return it
+
                 return (int) ChronoUnit.DAYS.between(benchedDate, currentDate);
             } catch (Exception e) {
                 System.err.println("Error parsing benchedOn date: " + e.getMessage());
-                return 0;  // Default to 0 if date parsing fails
+                return 0;
             }
         } else {
-            return 0;  // Default to 0 if `benchedOn` is not provided
+            return 0;
         }
-    }
-
-
-    // Setter for `benchedOn`
-    public void setBenchedOn(String benchedOn) {
-        this.benchedOn = benchedOn;
     }
 }
