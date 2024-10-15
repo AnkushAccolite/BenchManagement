@@ -1,37 +1,38 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+// import './Rafts.css';//  // Import a CSS file for additional styles
 
 // Define the interfaces for BenchRecord and Opening
 interface BenchRecord {
-  empId: string
-  empName: string
-  experience: number
-  skills: string
-  isInterviewScheduled?: boolean // Track if the interview is scheduled
-  scheduledFor?: string // Track which project the interview is scheduled for
-  status?: 'approved' | 'rejected'
+  empId: string;
+  empName: string;
+  experience: number;
+  skills: string;
+  isInterviewScheduled?: boolean; // Track if the interview is scheduled
+  scheduledFor?: string; // Track which project the interview is scheduled for
+  status?: 'approved' | 'rejected';
 }
 
 interface Opening {
-  id: string
-  projectName: string
-  openings: number
-  clientName: string
-  skills: string
-  location: string
-  experience: number // Added experience field for openings
-  scheduledCandidates: BenchRecord[] // Store the scheduled candidates
+  id: string;
+  projectName: string;
+  openings: number;
+  clientName: string;
+  skills: string;
+  location: string;
+  experience: number; // Added experience field for openings
+  scheduledCandidates: BenchRecord[]; // Store the scheduled candidates
 }
 
 const Rafts = () => {
-  const [benchRecords, setBenchRecords] = useState<BenchRecord[]>([])
-  const [openings, setOpenings] = useState<Opening[]>([])
-  const [modalOpen, setModalOpen] = useState(false)
-  const [modalMessage, setModalMessage] = useState('')
-  const [currentRecord, setCurrentRecord] = useState<BenchRecord | null>(null)
-  const [currentOpening, setCurrentOpening] = useState<Opening | null>(null)
-  const [openAccordions, setOpenAccordions] = useState<string[]>([]) // Track which accordions are open
-  const [benchFilter, setBenchFilter] = useState('')
-  const [openingFilter, setOpeningFilter] = useState('')
+  const [benchRecords, setBenchRecords] = useState<BenchRecord[]>([]);
+  const [openings, setOpenings] = useState<Opening[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [currentRecord, setCurrentRecord] = useState<BenchRecord | null>(null);
+  const [currentOpening, setCurrentOpening] = useState<Opening | null>(null);
+  const [openAccordions, setOpenAccordions] = useState<string[]>([]); // Track which accordions are open
+  const [benchFilter, setBenchFilter] = useState('');
+  const [openingFilter, setOpeningFilter] = useState('');
 
   useEffect(() => {
     // Dummy data for bench records
@@ -61,7 +62,7 @@ const Rafts = () => {
         skills: 'Java, Spring Boot',
       },
       // Add more records...
-    ]
+    ];
 
     // Dummy data for openings
     const dummyOpenings: Opening[] = [
@@ -96,59 +97,61 @@ const Rafts = () => {
         scheduledCandidates: [],
       },
       // Add more openings...
-    ]
+    ];
 
     // Setting the dummy data
-    setBenchRecords(dummyBenchRecords)
-    setOpenings(dummyOpenings)
-  }, [])
+    setBenchRecords(dummyBenchRecords);
+    setOpenings(dummyOpenings);
+  }, []);
 
   // Function to handle drag-and-drop
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, opening: Opening) => {
-    e.preventDefault()
-    const empId = e.dataTransfer.getData('text/plain')
-    const record = benchRecords.find((record) => record.empId === empId)
+    e.preventDefault();
+    const empId = e.dataTransfer.getData('text/plain');
+    const record = benchRecords.find((record) => record.empId === empId);
 
     if (record) {
       // Check if there are openings available
       if (opening.openings <= 0) {
-        setModalMessage(`No openings available for project ${opening.projectName}.`)
-        setModalOpen(true)
-        return
+        setModalMessage(
+          `No openings available for project ${opening.projectName}.`
+        );
+        setModalOpen(true);
+        return;
       }
 
       const skillsMatched = opening.skills
         .split(',')
-        .filter((skill) => record.skills.includes(skill.trim())).length // Count matched skills
-      const experienceMatched = record.experience >= opening.experience // Check if experience is equal or more than required
+        .filter((skill) => record.skills.includes(skill.trim())).length; // Count matched skills
+      const experienceMatched = record.experience >= opening.experience; // Check if experience is equal or more than required
 
-      const alreadyScheduled = record.scheduledFor === opening.id // Check if already scheduled for this opening
+      const alreadyScheduled = record.scheduledFor === opening.id; // Check if already scheduled for this opening
 
       if (alreadyScheduled) {
         setModalMessage(
           `Interview has already been scheduled for ${record.empName} for ${opening.projectName}.`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       } else if (skillsMatched >= 2 && experienceMatched) {
-        setCurrentRecord(record)
-        setCurrentOpening(opening) // Store the current opening
+        setCurrentRecord(record);
+        setCurrentOpening(opening); // Store the current opening
         setModalMessage(
           `Do you want to schedule an interview for ${record.empName} for project ${opening.projectName}?`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       } else if (skillsMatched < 2) {
         setModalMessage(
           `Can't schedule interview for ${record.empName} due to insufficient skills match.`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       } else {
         setModalMessage(
           `Experience level does not match for ${record.empName}. Required: ${opening.experience} years, Provided: ${record.experience} years.`
-        )
-        setModalOpen(true)
+        );
+        setModalOpen(true);
       }
     }
-  }
+  };
 
   // Function to confirm interview scheduling
   const confirmScheduleInterview = () => {
@@ -156,7 +159,7 @@ const Rafts = () => {
       // Remove the record from benchRecords
       setBenchRecords((prevRecords) =>
         prevRecords.filter((record) => record.empId !== currentRecord.empId)
-      )
+      );
 
       // Add the record to the scheduledCandidates of the corresponding opening
       setOpenings((prevOpenings) =>
@@ -171,16 +174,16 @@ const Rafts = () => {
               }
             : opening
         )
-      )
+      );
 
-      setModalOpen(false) // Close the modal
+      setModalOpen(false); // Close the modal
     }
-  }
+  };
 
   // Function to cancel scheduling and close the modal
   const cancelScheduleInterview = () => {
-    setModalOpen(false) // Close the modal
-  }
+    setModalOpen(false); // Close the modal
+  };
 
   // Toggle the accordion for the specific opening
   const toggleAccordion = (openingId: string) => {
@@ -188,23 +191,23 @@ const Rafts = () => {
       prevAccordions.includes(openingId)
         ? prevAccordions.filter((id) => id !== openingId)
         : [...prevAccordions, openingId]
-    )
-  }
+    );
+  };
 
   // Function to handle bench records filtering
   const filteredBenchRecords = benchRecords.filter((record) => {
-    const lowerCaseFilter = benchFilter.toLowerCase()
+    const lowerCaseFilter = benchFilter.toLowerCase();
     return (
       record.empId.toLowerCase().includes(lowerCaseFilter) ||
       record.empName.toLowerCase().includes(lowerCaseFilter) ||
       record.skills.toLowerCase().includes(lowerCaseFilter) ||
       record.experience.toString().includes(lowerCaseFilter)
-    )
-  })
+    );
+  });
 
   // Function to handle openings filtering
   const filteredOpenings = openings.filter((opening) => {
-    const lowerCaseFilter = openingFilter.toLowerCase()
+    const lowerCaseFilter = openingFilter.toLowerCase();
     return (
       opening.id.toLowerCase().includes(lowerCaseFilter) ||
       opening.projectName.toLowerCase().includes(lowerCaseFilter) ||
@@ -212,8 +215,8 @@ const Rafts = () => {
       opening.skills.toLowerCase().includes(lowerCaseFilter) ||
       opening.location.toLowerCase().includes(lowerCaseFilter) ||
       opening.experience.toString().includes(lowerCaseFilter)
-    )
-  })
+    );
+  });
 
   const handleApprove = (openingId: string, empId: string) => {
     setOpenings((prevOpenings) =>
@@ -224,17 +227,17 @@ const Rafts = () => {
               candidate.empId === empId
                 ? { ...candidate, status: 'approved' }
                 : candidate
-          )
+          );
           return {
             ...opening,
             openings: opening.openings - 1, // Reduce openings by 1 when approved
             scheduledCandidates: updatedCandidates,
-          }
+          };
         }
-        return opening
+        return opening;
       })
-    )
-  }
+    );
+  };
 
   const handleReject = (openingId: string, empId: string) => {
     setOpenings((prevOpenings) =>
@@ -245,35 +248,35 @@ const Rafts = () => {
               candidate.empId === empId
                 ? { ...candidate, status: 'rejected' }
                 : candidate
-          )
+          );
           return {
             ...opening,
             scheduledCandidates: updatedCandidates,
-          }
+          };
         }
-        return opening
+        return opening;
       })
-    )
-  }
+    );
+  };
 
   return (
     <div className='flex h-screen'>
       {/* Left Side - Bench Records */}
-      <div className='w-1/3 flex flex-col rounded-lg border bg-white p-4 shadow-md'>
-        <h2 className='mb-4 text-xl font-bold text-center'>Bench Records</h2>
+      <div className='flex w-1/3 flex-col rounded-lg border bg-light-gray p-4 shadow-lg'>
+        <h2 className='mb-4 text-center text-xl font-bold'>Bench Records</h2>
         <input
           type='text'
           placeholder='Filter Bench Records...'
-          className='mb-8 rounded border p-2 h-8'
+          className='mb-4 h-8 rounded border p-2'
           value={benchFilter}
           onChange={(e) => setBenchFilter(e.target.value)}
         />
         {/* Fixed Headers */}
-        <div className='mb-4 grid grid-cols-4  font-bold text-xs ml-2'>
+        <div className='mb-2 grid grid-cols-4 font-bold' style={{ fontSize: '90%' }}>
           <div>Emp ID</div>
           <div>Emp Name</div>
           <div>Experience</div>
-          <div className='ml-2'>Skills</div>
+          <div>Skills</div>
         </div>
         <div
           className='flex-1 overflow-y-auto'
@@ -282,7 +285,8 @@ const Rafts = () => {
           {filteredBenchRecords.map((record) => (
             <div
               key={record.empId}
-              className={`mb-2 grid grid-cols-4 rounded-lg border p-2 shadow-sm text-xs ${record.isInterviewScheduled ? 'bg-green-200' : 'bg-gray-100'}`}
+              className={`mb-2 grid grid-cols-4 rounded-lg border p-2 shadow-sm ${record.isInterviewScheduled ? 'bg-light-green' : 'bg-light-gray'}`}
+              style={{ fontSize: '90%' }}
               draggable
               onDragStart={(e) =>
                 e.dataTransfer.setData('text/plain', record.empId)
@@ -290,7 +294,7 @@ const Rafts = () => {
             >
               <div>{record.empId}</div>
               <div>{record.empName}</div>
-              <div className='ml-3'>{record.experience} years</div>
+              <div>{record.experience} years</div>
               <div>{record.skills}</div>
             </div>
           ))}
@@ -298,21 +302,21 @@ const Rafts = () => {
       </div>
 
       {/* Right Side - Openings */}
-      <div className='flex w-2/3 flex-col rounded-lg border bg-white p-4 shadow-md'>
-        <h2 className='mb-4 text-xl font-bold text-center'>Openings</h2>
+      <div className='flex w-2/3 flex-col rounded-lg border bg-light-gray p-4 shadow-lg'>
+        <h2 className='mb-4 text-center text-xl font-bold'>Openings</h2>
         <input
           type='text'
           placeholder='Filter Openings...'
-          className='mb-8 rounded border p-2 h-8'
+          className='mb-4 h-8 rounded border p-2'
           value={openingFilter}
           onChange={(e) => setOpeningFilter(e.target.value)}
         />
         {/* Fixed Headers */}
-        <div className='mb-4 grid grid-cols-7 font-bold text-xs'>
+        <div className='mb-2 grid grid-cols-7 font-bold' style={{ fontSize: '90%' }}>
           <div>Opening ID</div>
           <div>Project Name</div>
           <div>Client Name</div>
-          <div className='ml-2'>Skills</div>
+          <div>Skills</div>
           <div>Location</div>
           <div>Experience</div>
           <div>Openings</div>
@@ -323,23 +327,24 @@ const Rafts = () => {
         >
           {filteredOpenings.map((opening) => (
             <div
-              className='mb-2 grid grid-cols-7 rounded-lg border p-2 shadow-sm text-xs'
+              className='mb-2 grid grid-cols-7 rounded-lg border p-2 shadow-sm'
+              style={{ fontSize: '90%' }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => handleDrop(e, opening)}
               key={opening.id}
             >
               <div>{opening.id}</div>
               <div>{opening.projectName}</div>
-              <div className='ml-3'>{opening.clientName}</div>
+              <div>{opening.clientName}</div>
               <div>{opening.skills}</div>
               <div>{opening.location}</div>
-              <div className='ml-5'>{opening.experience} years</div>
-              <div className='ml-8'>{opening.openings}</div>
+              <div>{opening.experience} years</div>
+              <div>{opening.openings}</div>
               {/* Accordion for Scheduled Candidates */}
               {opening.scheduledCandidates.length > 0 && (
-                <div className='col-span-6 mt-2'>
+                <div className='col-span-7 mt-2'>
                   <button
-                    className='w-full rounded bg-gray-100 p-2 text-left shadow-sm'
+                    className='w-full rounded bg-gray-200 p-2 text-left shadow-sm'
                     onClick={() => toggleAccordion(opening.id)}
                   >
                     {openAccordions.includes(opening.id)
@@ -348,13 +353,13 @@ const Rafts = () => {
                   </button>
 
                   {openAccordions.includes(opening.id) && (
-                    <div className='mt-2 rounded-lg bg-gray-50 p-4'>
+                    <div className='mt-2 rounded-lg bg-gray-100 p-4'>
                       {opening.scheduledCandidates.map((candidate) => (
                         <div
-                          className={`mb-2 flex items-center justify-between ${candidate.status === 'approved' || candidate.status === 'rejected' ? 'bg-gray-300' : ''}`}
+                          className={`mb-2 flex items-center justify-between rounded-lg p-2 ${candidate.status === 'approved' ? 'bg-green-100' : candidate.status === 'rejected' ? 'bg-red-100' : 'bg-gray-50'}`}
                           key={candidate.empId}
                         >
-                          <strong>
+                          <strong className='text-gray-800'>
                             {candidate.empId} - {candidate.empName}
                           </strong>
                           <div>
@@ -369,13 +374,17 @@ const Rafts = () => {
                             <div className='flex space-x-2'>
                               <button
                                 className='rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600'
-                                onClick={() => handleApprove(opening.id, candidate.empId)}
+                                onClick={() =>
+                                  handleApprove(opening.id, candidate.empId)
+                                }
                               >
                                 Approve
                               </button>
                               <button
                                 className='rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600'
-                                onClick={() => handleReject(opening.id, candidate.empId)}
+                                onClick={() =>
+                                  handleReject(opening.id, candidate.empId)
+                                }
                               >
                                 Reject
                               </button>
@@ -426,7 +435,7 @@ const Rafts = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Rafts
+export default Rafts;
