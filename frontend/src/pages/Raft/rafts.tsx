@@ -116,32 +116,34 @@ const Rafts = () => {
     e.preventDefault();
     const empId = e.dataTransfer.getData('text/plain');
     const record = benchRecords.find((record) => record.empId === empId);
-
-    console.log('===>', record, opening)
-
+  
     if (record) {
       // Check if there are openings available
       if (opening.openings <= 0) {
         setModalMessage(
           `No openings available for project ${opening.projectName}.`
-        )
-        setModalOpen(true)
-        return
+        );
+        setModalOpen(true);
+        return;
       }
-
+  
+      // Check if the candidate already has a scheduled interview for the same project
+      const alreadyScheduledForSameProject = record.scheduledFor === opening.projectName;
+  
+      if (alreadyScheduledForSameProject) {
+        setModalMessage(
+          `Interview has already been scheduled for ${record.empName} for ${opening.projectName}, regardless of the status.`
+        );
+        setModalOpen(true);
+        return;
+      }
+  
       const skillsMatched = opening.skills
         .split(',')
         .filter((skill) => record.skills.includes(skill.trim())).length; // Count matched skills
       const experienceMatched = record.experience >= opening.experience; // Check if experience is equal or more than required
-
-      const alreadyScheduled = record.scheduledFor === opening.id; // Check if already scheduled for this opening
-
-      if (alreadyScheduled) {
-        setModalMessage(
-          `Interview has already been scheduled for ${record.empName} for ${opening.projectName}.`
-        );
-        setModalOpen(true);
-      } else if (skillsMatched >= 2 && experienceMatched) {
+  
+      if (skillsMatched >= 2 && experienceMatched) {
         setCurrentRecord(record);
         setCurrentOpening(opening); // Store the current opening
         setModalMessage(
@@ -161,6 +163,7 @@ const Rafts = () => {
       }
     }
   };
+  
 
   const confirmScheduleInterview = () => {
     if (currentRecord && currentOpening) {
@@ -230,11 +233,18 @@ const Rafts = () => {
   });
 
   const handleApprove = async (openingId: string, empId: string) => {
-    await axiosInstance.put(
-      `scheduledInterviews/${empId}/status/${openingId}/approved`
-    )
-    fetchData()
-  }
+  await axiosInstance.put(
+    `scheduledInterviews/${empId}/status/${openingId}/approved`
+  );
+  // Fetch the updated data
+  fetchData(); // This will update the records again
+
+  // Remove the approved candidate from the bench records
+  setBenchRecords((prevRecords) =>
+    prevRecords.filter((record) => record.empId !== empId)
+  );
+}
+
 
   const handleReject = async (openingId: string, empId: string) => {
     await axiosInstance.put(
