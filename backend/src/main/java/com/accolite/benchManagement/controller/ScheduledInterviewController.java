@@ -43,4 +43,14 @@ public class ScheduledInterviewController {
                     interviewRepository.update(interview);
                 });
     }
+
+    @GetMapping("/{empId}/status/{openingId}")
+    public ResponseEntity<?> getInterviewStatus(@PathVariable String empId, @PathVariable String openingId) {
+        List<ScheduledInterview> interviews = interviewRepository.findAll();
+        return interviews.stream()
+                .filter(interview -> interview.getEmpId().equals(empId) && interview.getOpeningId().equals(openingId))
+                .findFirst()
+                .map(interview -> ResponseEntity.ok(interview.getStatus()))
+                .orElse(ResponseEntity.ok("notFound"));
+    }
 }

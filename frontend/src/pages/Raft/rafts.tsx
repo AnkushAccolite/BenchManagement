@@ -162,7 +162,7 @@ const Rafts = () => {
     }
   }
 
-  const confirmScheduleInterview = () => {
+  const confirmScheduleInterview = async () => {
     if (currentRecord && currentOpening) {
       const scheduledInterview = {
         empId: currentRecord.empId,
@@ -176,18 +176,29 @@ const Rafts = () => {
 
       // console.log('sch', currentOpening)
 
-      axiosInstance
-        .post('/scheduledInterviews', scheduledInterview)
-        .then((response) => {
-          fetchData()
+      const { data: status } = await axiosInstance.get(
+        `/scheduledInterviews/${currentRecord.empId}/status/${currentOpening.id}`
+      )
 
-          setModalOpen(false) // Close the modal
-        })
-        .catch((error) => {
-          console.error('Error scheduling interview:', error)
-          setModalMessage('Error scheduling interview. Please try again.')
-          setModalOpen(true)
-        })
+      if (status === 'notFound') {
+        axiosInstance
+          .post('/scheduledInterviews', scheduledInterview)
+          .then(() => {
+            fetchData()
+
+            setModalOpen(false) // Close the modal
+          })
+          .catch((error) => {
+            console.error('Error scheduling interview:', error)
+            setModalMessage('Error scheduling interview. Please try again.')
+            setModalOpen(true)
+          })
+      } else {
+        alert(
+          `The candidate has already been ${status.toUpperCase()} for this opening`
+        )
+        setModalOpen(false)
+      }
     }
   }
 
