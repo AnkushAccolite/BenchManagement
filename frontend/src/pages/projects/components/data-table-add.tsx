@@ -203,8 +203,8 @@ export default function AddProject() {
     deptName: '',
     deptHead: '',
     location: '',
-    startdate: '', // New field for start date
-    enddate: '',   // New field for end date
+    startDate: '', // New field for start date
+    endDate: '', // New field for end date
   }
 
   const [formData, setFormData] = useState(initialFormState)
@@ -219,6 +219,7 @@ export default function AddProject() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
+    // console.log('-=-=', formData)
 
     await axiosInstance.post('/project', formData)
     alert('Project added successfully!')
@@ -264,7 +265,7 @@ export default function AddProject() {
                     </select>
                   </td>
                 </tr>
-                
+
                 {/* Project Name */}
                 <tr>
                   <td className='border border-gray-300 px-4 py-2 font-semibold text-black dark:border-gray-600 dark:text-white'>
@@ -368,9 +369,9 @@ export default function AddProject() {
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
                     <input
                       type='date'
-                      id='startdate'
-                      name='startdate'
-                      value={formData.startdate}
+                      id='startDate'
+                      name='startDate'
+                      value={formData.startDate}
                       onChange={handleChange}
                       className='w-full rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring dark:border-gray-600 dark:bg-gray-900 dark:text-white'
                       required
@@ -386,9 +387,9 @@ export default function AddProject() {
                   <td className='border border-gray-300 px-4 py-2 dark:border-gray-600'>
                     <input
                       type='date'
-                      id='enddate'
-                      name='enddate'
-                      value={formData.enddate}
+                      id='endDate'
+                      name='endDate'
+                      value={formData.endDate}
                       onChange={handleChange}
                       className='w-full rounded-md border px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring dark:border-gray-600 dark:bg-gray-900 dark:text-white'
                       required

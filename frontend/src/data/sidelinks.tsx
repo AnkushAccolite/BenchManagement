@@ -3,6 +3,7 @@ import {
   IconLayoutDashboard,
   IconBook,
   IconNotebook,
+  IconClipboardCheck,
   
 } from '@tabler/icons-react'
 
@@ -25,6 +26,12 @@ export const sidelinks: SideLink[] = [
     icon: <IconLayoutDashboard size={18} />,
   },
   {
+    title: 'Bench Records',
+    label: '',
+    href: '/tasks',
+    icon: <IconBook size={18} />,
+  },
+  {
     title: 'Projects',
     label: '',
     href: '/projects',
@@ -32,14 +39,16 @@ export const sidelinks: SideLink[] = [
   },
   {
     title: 'Job Openings',
-    label: '',
-    href: '/openings',
-    icon: <IconBriefcase size={18} />,
-  },
+     label: '',
+     href: '/openings',
+     icon: <IconBriefcase size={18} />,
+   },
   {
-    title: 'Bench Records',
+    title: 'Scheduler',
     label: '',
-    href: '/tasks',
-    icon: <IconBook size={18} />,
+    href: '/raft',
+    icon: <IconClipboardCheck size={18} />,
   },
+ 
+  
 ]

@@ -10,19 +10,20 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 @Document(collection = "BenchedEmployees")
 @Data
-@NoArgsConstructor // Added for deserialization
-@AllArgsConstructor // All-arguments constructor for quick object initialization
-public class BenchedEmployee {
+@NoArgsConstructor
+@AllArgsConstructor
+public class BenchedEmployee implements Serializable {
 
     @Id
-    @Indexed(unique = true)
     private String id;
 
     private String name;
@@ -43,16 +44,17 @@ public class BenchedEmployee {
 
     private Integer experience;
 
-    @DBRef
-    private List<Skill> skills;
+    private Integer ageing;
 
-    private Boolean isDeleted = false;  // Default to false
+    private String skills;
 
-    // Date formatter for parsing the date string
+    private Boolean isDeleted = false;
+
+
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
-        public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation,String benchedOn,Integer experience) {
+        public BenchedEmployee(String name, @NonNull String empId, String doj, String baseLocation,String benchedOn,Integer experience,String skills ) {
         this.name = name;
         this.empId = empId;
         this.doj = doj;
@@ -60,34 +62,28 @@ public class BenchedEmployee {
         this.benchedOn = benchedOn;
         this.experience=experience;
         this.isDeleted=false;
-        this.client="UnAssigned";
+        this.client="Not Assigned";
+        this.skills=skills;
+        this.id = UUID.randomUUID().toString();
     }
-    // Method to calculate ageing dynamically
-    // Method to calculate ageing dynamically
     public Integer getAgeing() {
         if (benchedOn != null && !benchedOn.isEmpty()) {
             try {
-                // Trim any extra whitespace or newlines
+
                 String trimmedBenchedOn = benchedOn.trim();
 
-                // Parse the trimmed date string
+
                 LocalDate benchedDate = LocalDate.parse(trimmedBenchedOn, FORMATTER);
                 LocalDate currentDate = LocalDate.now();
 
-                // Calculate the difference in days and return it
+
                 return (int) ChronoUnit.DAYS.between(benchedDate, currentDate);
             } catch (Exception e) {
                 System.err.println("Error parsing benchedOn date: " + e.getMessage());
-                return 0;  // Default to 0 if date parsing fails
+                return 0;
             }
         } else {
-            return 0;  // Default to 0 if `benchedOn` is not provided
+            return 0;
         }
-    }
-
-
-    // Setter for `benchedOn`
-    public void setBenchedOn(String benchedOn) {
-        this.benchedOn = benchedOn;
     }
 }

@@ -4,7 +4,6 @@ import NotFoundError from './pages/errors/not-found-error'
 import MaintenanceError from './pages/errors/maintenance-error'
 import UnauthorisedError from './pages/errors/unauthorised-error.tsx'
 
-
 const router = createBrowserRouter([
   // Auth routes
   // {
@@ -62,7 +61,9 @@ const router = createBrowserRouter([
       {
         path: '/add-employee',
         lazy: async () => ({
-          Component: (await import('./pages/tasks/components/data-table-add.tsx')).default,
+          Component: (
+            await import('./pages/tasks/components/data-table-add.tsx')
+          ).default,
         }),
       },
 
@@ -73,9 +74,18 @@ const router = createBrowserRouter([
         }),
       },
       {
+        path: 'project-dashboard',
+        lazy: async () => ({
+          Component: (await import('@/pages/dashboard/project-details.tsx'))
+            .default,
+        }),
+      },
+      {
         path: '/add-item',
         lazy: async () => ({
-          Component: (await import('./pages/openings/components/data-table-add.tsx')).default,
+          Component: (
+            await import('./pages/openings/components/data-table-add.tsx')
+          ).default,
         }),
       },
       {
@@ -87,7 +97,15 @@ const router = createBrowserRouter([
       {
         path: '/add-project',
         lazy: async () => ({
-          Component: (await import('./pages/projects/components/data-table-add.tsx')).default,
+          Component: (
+            await import('./pages/projects/components/data-table-add.tsx')
+          ).default,
+        }),
+      },
+      {
+        path: 'raft',
+        lazy: async () => ({
+          Component: (await import('@/pages/raft/rafts.tsx')).default,
         }),
       },
       {

@@ -5,7 +5,6 @@ import { UserNav } from '@/components/user-nav'
 import { DataTable } from './components/data-table'
 import { columns } from './components/columns'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import axiosInstance from '@/lib/axios'
 
 export default function Tasks() {
@@ -43,52 +42,7 @@ export default function Tasks() {
         const benchedEmployeesRes = await axiosInstance.get('/benched-employee')
         const benchedEmployees = benchedEmployeesRes.data
 
-        // Fetch project requirement summary
-        const projectRequirementRes = await axiosInstance.get(
-          '/project-requirement/summary'
-        )
-        const projectRequirements = projectRequirementRes.data
-
-        // Log full responses for debugging purposes
-        // console.log('Benched Employees:', benchedEmployees)
-        // console.log('Project Requirements:', projectRequirements)
-
-        // Transform the benched employees data to update status and client based on project requirements
-        const updatedBenchedEmployees = benchedEmployees.map((employee) => {
-          let updatedStatus = employee.status
-          let updatedClient = employee.client
-
-          // Loop through each project requirement and check if the employee id is in interviewScheduled or selectedEmployees
-          projectRequirements.forEach((req) => {
-            if (
-              req.interviewScheduled.includes(employee.id) &&
-              employee.status === 'UNDER_EVALUATION'
-            ) {
-              updatedStatus = 'INTERVIEW_SCHEDULED'
-              updatedClient = req.id
-            } else if (
-              req.selectedEmployees.includes(employee.id) &&
-              employee.status === 'UNDER_EVALUATION'
-            ) {
-              updatedStatus =
-                employee.status !== 'ONBOARDED'
-                  ? 'ONBOARDING_IN_PROGRESS'
-                  : 'ONBOARDED'
-              updatedClient = req.id
-            }
-          })
-
-          // Return the employee object with updated status and client
-          return {
-            ...employee,
-            status: transformStatus(updatedStatus),
-            client: updatedClient,
-          }
-        })
-
-        // Update the state with the transformed benched employees data
-        // console.log('Updated Benched Employees:', updatedBenchedEmployees)
-        const temp = transformSkills(updatedBenchedEmployees)
+        const temp = transformSkills(benchedEmployees)
         setTasks(temp) // Assuming setTasks is used to update the state of the benched employees
       } catch (err) {
         console.error('Error fetching data:', err)
